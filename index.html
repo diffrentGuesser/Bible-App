@@ -1,600 +1,700 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FaithFlow · clean verse</title>
-  <!-- Fonts: sharper, like ChatGPT (Inter + system fallback) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;1,14..32,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* modern reset + clean base */
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FaithFlow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-    :root {
-      --bg: #0a0a0c;
-      --surface: #121215;
-      --card: #1b1b20;
-      --card-hover: #22222a;
-      --border: #2c2c34;
-      --border-light: #3a3a45;
-      --text-main: #eaeef2;
-      --text-soft: #bdc3cf;
-      --text-muted: #8e95a5;
-      --accent: #a48b5e;
-      --accent-soft: #c9b585;
-      --accent-dim: #5f543c;
-      --gold: #b8a06c;
-      --gold-soft: #d4be8c;
-      --red: #cc5b4a;
-      --green: #4c9a7a;
-      --sidebar-width: 240px;
-      --panel-width: 300px;
-      --top-height: 60px;
-      --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      --font-serif: 'Plus Jakarta Sans', var(--font-sans);  /* clean, modern serif alternative */
-      --shadow-lg: 0 10px 25px -5px rgba(0,0,0,0.6);
-    }
+:root {
+  --bg:        #09090b;
+  --surface:   #0f0f12;
+  --card:      #161619;
+  --card2:     #1c1c21;
+  --card3:     #222228;
+  --gold:      #c9a84c;
+  --gold-lt:   #e8cb7a;
+  --gold-dk:   #5e4a20;
+  --gold-glow: rgba(201,168,76,0.15);
+  --cream:     #f2e8d5;
+  --cream-dim: #b0a08a;
+  --text:      #e2d5c0;
+  --muted:     #666060;
+  --border:    rgba(201,168,76,0.10);
+  --border-hi: rgba(201,168,76,0.30);
+  --red:       #c0392b;
+  --green:     #27ae60;
+  --pink:      #e040a0;
+  --TAB:       66px;
+  --TOP:       60px;
+  --SIDEBAR:   240px;
+  --PANEL:     300px;
+}
 
-    html { background: #030305; height: 100%; }
-    body {
-      height: 100%;
-      background: var(--bg);
-      font-family: var(--font-sans);
-      font-size: 15px;
-      line-height: 1.5;
-      color: var(--text-main);
-      -webkit-font-smoothing: antialiased;
-      overflow: hidden;
-    }
+html { height:100%; background:#06060a; }
+body {
+  height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans', sans-serif;
+  font-size:15px;
+  -webkit-tap-highlight-color:transparent;
+  overflow:hidden;
+  font-weight:400;
+}
 
-    /* SHELL: fully expansive, left sidebar + center + right panel */
-    #shell {
-      display: flex;
-      height: 100%;
-      width: 100%;
-      background: var(--bg);
-    }
+/* ─── SHELL ─── */
+#shell {
+  position:fixed; inset:0;
+  display:flex; align-items:stretch; justify-content:center;
+  background:#06060a;
+}
 
-    /* left sidebar – always visible on desktop */
-    #sidebar {
-      width: var(--sidebar-width);
-      background: var(--surface);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      padding: 24px 16px;
-      flex-shrink: 0;
-      gap: 6px;
-      overflow-y: auto;
-    }
+/* ─── SIDEBAR ─── */
+#sidebar {
+  display:none;
+  flex-direction:column;
+  width:var(--SIDEBAR);
+  border-right:1px solid var(--border);
+  background:var(--surface);
+  padding:24px 14px 24px;
+  flex-shrink:0; gap:2px;
+}
+.sidebar-logo {
+  font-family:'Cormorant Garamond', serif;
+  font-size:26px; font-weight:600;
+  color:var(--gold); letter-spacing:0.02em;
+  padding:4px 10px 28px;
+  display:flex; align-items:baseline; gap:0;
+}
+.sidebar-logo em { color:var(--cream); font-style:italic; font-weight:400; }
+.side-tab {
+  display:flex; align-items:center; gap:11px;
+  padding:10px 12px; border-radius:10px;
+  border:none; background:none; cursor:pointer;
+  color:var(--muted); font-family:'DM Sans',sans-serif;
+  font-size:13.5px; font-weight:500;
+  transition:color .2s, background .2s;
+  text-align:left; width:100%; letter-spacing:0.01em;
+}
+.side-tab svg { width:17px; height:17px; flex-shrink:0; opacity:.85; }
+.side-tab:hover { color:var(--text); background:rgba(255,255,255,.04); }
+.side-tab.active { color:var(--gold); background:rgba(201,168,76,.10); }
+.side-tab.active svg { opacity:1; }
 
-    .logo {
-      font-family: var(--font-serif);
-      font-size: 24px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      padding: 8px 12px 24px 12px;
-      color: var(--gold-soft);
-    }
-    .logo span { color: var(--text-main); font-weight: 400; }
+/* sidebar divider */
+.side-divider { height:1px; background:var(--border); margin:10px 10px; }
 
-    .side-btn {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 12px 14px;
-      border-radius: 12px;
-      border: none;
-      background: transparent;
-      color: var(--text-soft);
-      font-family: var(--font-sans);
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-      width: 100%;
-      text-align: left;
-    }
-    .side-btn svg { width: 20px; height: 20px; stroke: currentColor; stroke-width: 1.8; fill: none; }
-    .side-btn:hover { background: rgba(200,180,140,0.08); color: var(--text-main); }
-    .side-btn.active {
-      background: rgba(180, 150, 100, 0.15);
-      color: var(--gold-soft);
-    }
+/* ─── CENTER PANE ─── */
+#pane {
+  flex:1; min-width:0;
+  display:flex; flex-direction:column;
+  height:100%;
+  overflow:hidden; position:relative;
+  background:var(--bg);
+  max-width:680px; /* wider center */
+  border-right:1px solid var(--border);
+  border-left:1px solid var(--border);
+}
 
-    /* center pane – grows, but with max-width on content for readability */
-    #pane {
-      flex: 1 1 auto;
-      display: flex;
-      flex-direction: column;
-      background: var(--bg);
-      min-width: 320px;
-      max-width: 780px;  /* comfortable reading width on huge screens */
-      border-right: 1px solid var(--border);
-    }
+/* ─── RIGHT PANEL ─── */
+#panel {
+  display:none;
+  flex-direction:column;
+  width:var(--PANEL); flex-shrink:0;
+  padding:24px 18px; gap:14px;
+  overflow-y:auto;
+  scrollbar-width:thin;
+  scrollbar-color:var(--border) transparent;
+}
 
-    #topbar {
-      height: var(--top-height);
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-      flex-shrink: 0;
-    }
-    .page-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: var(--text-main);
-      letter-spacing: -0.01em;
-    }
-    .app-logo-mobile { display: none; } /* hidden on desktop */
+@media (min-width:760px) {
+  #sidebar { display:flex; }
+  #tabbar  { display:none !important; }
+  #topbar .app-logo { display:none; }
+}
+@media (min-width:1160px) {
+  #panel { display:flex; }
+  #pane  { max-width:720px; }
+}
+@media (min-width:1400px) {
+  #pane { max-width:780px; }
+  #panel { width:320px; }
+  #sidebar { width:260px; }
+}
 
-    /* pages container */
-    #pages {
-      flex: 1;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: var(--border) transparent;
-      padding: 8px 16px 20px 16px;
-    }
-    #pages::-webkit-scrollbar { width: 5px; }
-    #pages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 8px; }
+/* ─── TOP BAR ─── */
+#topbar {
+  height:var(--TOP);
+  background:var(--surface);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center;
+  justify-content:space-between;
+  padding:0 20px; flex-shrink:0; z-index:10;
+}
+.app-logo {
+  font-family:'Cormorant Garamond', serif;
+  font-size:24px; font-weight:600;
+  color:var(--gold); letter-spacing:0.02em;
+}
+.app-logo em { color:var(--cream); font-style:italic; font-weight:400; }
+.page-title {
+  font-family:'Cormorant Garamond', serif;
+  font-size:19px; font-weight:500; color:var(--cream);
+  letter-spacing:0.01em;
+}
 
-    .page {
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .page.active { display: flex; }
+/* ─── PAGES ─── */
+#pages { flex:1; overflow:hidden; position:relative; }
+.page {
+  position:absolute; inset:0;
+  overflow-y:auto; overflow-x:hidden;
+  display:none; flex-direction:column;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  scrollbar-color:var(--border) transparent;
+  padding-bottom:28px;
+}
+.page::-webkit-scrollbar { width:3px; }
+.page::-webkit-scrollbar-thumb { background:var(--border); border-radius:4px; }
+.page.active { display:flex; }
 
-    /* right panel – always visible when width > 1100px */
-    #panel {
-      width: var(--panel-width);
-      background: var(--surface);
-      border-left: 1px solid var(--border);
-      flex-shrink: 0;
-      padding: 28px 20px;
-      overflow-y: auto;
-      display: none;
-      flex-direction: column;
-      gap: 24px;
-    }
+/* ─── TAB BAR ─── */
+#tabbar {
+  height:var(--TAB);
+  background:var(--surface);
+  border-top:1px solid var(--border);
+  display:flex; flex-shrink:0; z-index:10;
+}
+.tab {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:4px;
+  background:none; border:none; cursor:pointer;
+  color:var(--muted); font-family:'DM Sans',sans-serif;
+  font-size:9.5px; font-weight:600;
+  letter-spacing:.07em; text-transform:uppercase;
+  transition:color .2s;
+  padding-bottom:env(safe-area-inset-bottom, 0);
+}
+.tab svg { width:19px; height:19px; transition:transform .2s; }
+.tab.active { color:var(--gold); }
+.tab.active svg { transform:translateY(-1px); }
 
-    /* responsive breakpoints */
-    @media (min-width: 1000px) {
-      #panel { display: flex; }
-    }
-    /* mobile tabbar hidden on desktop */
-    #tabbar {
-      display: none;
-      height: 64px;
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-    }
+/* ─── SECTION LABEL ─── */
+.sec-label {
+  font-size:10px; letter-spacing:.20em; text-transform:uppercase;
+  color:var(--gold-dk); font-weight:600;
+  padding:24px 20px 10px;
+  display:flex; align-items:center; gap:8px;
+}
+.sec-label::after { content:''; flex:1; height:1px; background:var(--border); }
 
-    /* ----- components (clean, ChatGPT-like) ----- */
-    .section-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      padding: 16px 6px 4px 6px;
-    }
+/* ─── DAILY CARD ─── */
+.daily-card {
+  margin:16px 16px 4px;
+  background:linear-gradient(160deg,#131318 0%,#1a1820 50%,#131318 100%);
+  border:1px solid var(--border-hi);
+  border-radius:20px; padding:28px 26px;
+  position:relative; overflow:hidden;
+}
+.daily-card::before {
+  content:'';
+  position:absolute; top:-40px; right:-40px;
+  width:220px; height:220px;
+  background:radial-gradient(circle, rgba(201,168,76,.10) 0%, transparent 65%);
+  pointer-events:none;
+}
+.daily-card::after {
+  content:'';
+  position:absolute; bottom:-60px; left:-20px;
+  width:180px; height:180px;
+  background:radial-gradient(circle, rgba(201,168,76,.05) 0%, transparent 65%);
+  pointer-events:none;
+}
+.daily-tag {
+  font-size:9.5px; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--gold); font-weight:600;
+  display:flex; align-items:center; gap:8px; margin-bottom:18px;
+  position:relative; z-index:1;
+}
+.daily-tag::before { content:''; width:18px; height:1px; background:var(--gold-dk); }
+.daily-text {
+  font-family:'Cormorant Garamond', serif;
+  font-size:20px; line-height:1.70; color:var(--cream);
+  font-style:italic; margin-bottom:14px;
+  position:relative; z-index:1; font-weight:400;
+}
+.daily-ref {
+  font-size:11.5px; color:var(--gold); font-weight:500; letter-spacing:.06em;
+  position:relative; z-index:1;
+}
+.daily-actions { display:flex; gap:8px; margin-top:20px; flex-wrap:wrap; position:relative; z-index:1; }
+.pill {
+  display:flex; align-items:center; gap:6px;
+  border:1px solid var(--border-hi);
+  background:rgba(201,168,76,.06);
+  color:var(--cream-dim); border-radius:100px;
+  padding:7px 15px; font-size:12px; font-weight:500;
+  font-family:'DM Sans',sans-serif; cursor:pointer;
+  transition:background .2s, color .2s;
+}
+.pill:hover { background:rgba(201,168,76,.14); color:var(--gold); }
+.pill svg { width:13px; height:13px; }
+.pill.pill-saved { color:var(--pink); border-color:rgba(224,64,160,.35); background:rgba(224,64,160,.07); }
 
-    /* cards */
-    .verse-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 20px 20px 16px;
-      transition: border-color 0.15s, background 0.15s;
-    }
-    .verse-card:hover { border-color: var(--border-light); background: var(--card-hover); }
-    .verse-text {
-      font-family: var(--font-serif);
-      font-size: 16px;
-      font-weight: 500;
-      line-height: 1.6;
-      color: var(--text-main);
-      margin-bottom: 8px;
-    }
-    .verse-ref {
-      font-size: 12px;
-      font-weight: 500;
-      color: var(--gold-soft);
-      letter-spacing: 0.01em;
-    }
-    .card-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
-    .action-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: none;
-      border: none;
-      color: var(--text-soft);
-      font-size: 13px;
-      font-weight: 500;
-      padding: 6px 12px;
-      border-radius: 30px;
-      cursor: pointer;
-      transition: background 0.15s, color 0.15s;
-    }
-    .action-btn svg { width: 16px; height: 16px; }
-    .action-btn:hover { background: rgba(255,255,240,0.06); color: var(--text-main); }
-    .action-btn.saved { color: #e07a9c; }
+/* ─── TRENDING CARD ─── */
+.vcard {
+  margin:0 16px 10px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px; padding:18px 20px 14px;
+  transition:border-color .25s;
+}
+.vcard:hover { border-color:var(--border-hi); }
+.vcard-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+.vcard-text {
+  font-family:'Cormorant Garamond', serif;
+  font-size:16.5px; line-height:1.65; color:var(--cream);
+  font-style:italic; font-weight:400;
+}
+.vcard-ref {
+  font-size:11px; color:var(--gold);
+  font-weight:600; letter-spacing:.07em; margin-top:9px;
+}
+.fav-count-badge {
+  display:flex; align-items:center; gap:4px;
+  font-size:11px; color:var(--muted); font-weight:500;
+  flex-shrink:0; margin-left:12px; margin-top:2px;
+  white-space:nowrap;
+}
+.fav-count-badge svg { width:12px; height:12px; color:var(--pink); }
+.vcard-actions {
+  display:flex; gap:6px; margin-top:13px;
+  padding-top:12px; border-top:1px solid var(--border);
+}
+.act-btn {
+  display:flex; align-items:center; gap:5px;
+  background:none; border:none; cursor:pointer;
+  color:var(--muted); font-size:12px; font-weight:500;
+  font-family:'DM Sans',sans-serif;
+  padding:5px 10px; border-radius:8px;
+  transition:color .2s, background .2s;
+}
+.act-btn:hover { color:var(--gold); background:rgba(201,168,76,.08); }
+.act-btn.saved { color:var(--pink); }
+.act-btn svg { width:14px; height:14px; }
 
-    /* daily hero */
-    .daily-hero {
-      background: linear-gradient(145deg, #19171c, #1f1b1f);
-      border: 1px solid var(--border-light);
-      border-radius: 24px;
-      padding: 28px 26px;
-      margin-bottom: 8px;
-    }
-    .daily-label {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      color: var(--gold-soft);
-      margin-bottom: 16px;
-    }
-    .daily-label::before { content: '✦'; font-size: 16px; }
-    .daily-text {
-      font-family: var(--font-serif);
-      font-size: 22px;
-      font-weight: 500;
-      line-height: 1.5;
-      color: var(--text-main);
-      margin-bottom: 12px;
-    }
-    .daily-ref { font-size: 14px; color: var(--gold-soft); font-weight: 500; }
-    .pill-group {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 24px;
-    }
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 18px;
-      background: rgba(180,150,100,0.08);
-      border: 1px solid var(--border-light);
-      border-radius: 40px;
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-soft);
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-    .pill:hover { background: rgba(180,150,100,0.16); }
-    .pill.saved { color: #e07a9c; border-color: #9f6b7a; }
+/* ─── REEL ─── */
+#page-verses { padding-bottom:0; overflow:hidden; }
+#page-verses.active { display:flex; }
+#reel-wrap {
+  flex:1; overflow-y:scroll;
+  scroll-snap-type:y mandatory;
+  scrollbar-width:none;
+}
+#reel-wrap::-webkit-scrollbar { display:none; }
 
-    /* reel */
-    #reel-wrap {
-      height: 100%;
-      overflow-y: scroll;
-      scroll-snap-type: y mandatory;
-      scrollbar-width: none;
-    }
-    .reel-slide {
-      min-height: 100%;
-      scroll-snap-align: start;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 24px 20px 50px;
-      text-align: center;
-    }
-    .reel-book {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-      margin-bottom: 16px;
-    }
-    .reel-verse {
-      font-family: var(--font-serif);
-      font-size: 24px;
-      font-weight: 500;
-      line-height: 1.6;
-      max-width: 600px;
-      margin-bottom: 16px;
-    }
-    .reel-ref {
-      font-size: 14px;
-      font-weight: 500;
-      color: var(--gold-soft);
-      margin-bottom: 28px;
-    }
-    .reel-actions {
-      display: flex;
-      gap: 28px;
-      justify-content: center;
-    }
-    .reel-btn {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-      background: none;
-      border: none;
-      color: var(--text-soft);
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-    }
-    .reel-btn svg { width: 26px; height: 26px; }
-    .reel-btn.saved { color: #e07a9c; }
+.reel-slide {
+  min-height:100%; scroll-snap-align:start; scroll-snap-stop:always;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  padding:40px 36px 100px; position:relative; overflow:hidden;
+  background:var(--bg);
+}
+.reel-slide::before {
+  content:'';
+  position:absolute; inset:0;
+  background:radial-gradient(ellipse at 30% 40%, rgba(201,168,76,.06) 0%, transparent 55%);
+  pointer-events:none;
+}
+.reel-testament {
+  font-size:9px; letter-spacing:.22em; text-transform:uppercase;
+  color:var(--gold-dk); font-weight:600; margin-bottom:24px;
+  align-self:flex-start;
+}
+.reel-text {
+  font-family:'Cormorant Garamond', serif;
+  font-size:clamp(20px,4.8vw,30px);
+  line-height:1.70; color:var(--cream);
+  text-align:center; font-style:italic; font-weight:400;
+  margin-bottom:18px;
+}
+.reel-ref {
+  font-size:13px; color:var(--gold); font-weight:500;
+  letter-spacing:.07em; margin-bottom:32px;
+}
+.reel-actions { display:flex; gap:24px; justify-content:center; }
+.reel-btn {
+  display:flex; flex-direction:column; align-items:center; gap:5px;
+  background:none; border:none; cursor:pointer; color:var(--muted);
+  font-family:'DM Sans',sans-serif; font-size:11px; font-weight:500;
+  transition:color .2s, transform .15s;
+}
+.reel-btn svg { width:26px; height:26px; }
+.reel-btn:active { transform:scale(.9); }
+.reel-btn.saved { color:var(--pink); }
 
-    /* game */
-    .game-header {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px 22px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .score-box { line-height: 1.3; }
-    .score-label { font-size: 11px; color: var(--text-muted); }
-    .score-number { font-size: 32px; font-weight: 700; color: var(--gold-soft); }
-    .streak-badge {
-      background: #6b4f3c;
-      border-radius: 30px;
-      padding: 6px 15px;
-      font-weight: 600;
-      color: #fae6c0;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .game-verse-box {
-      background: var(--card);
-      border: 1px solid var(--border-light);
-      border-radius: 20px;
-      padding: 28px 22px;
-      text-align: center;
-    }
-    .phase-label {
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin: 8px 0 12px;
-    }
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .opt {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 18px;
-      font-size: 15px;
-      font-weight: 500;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.1s;
-    }
-    .opt:hover { border-color: var(--border-light); background: var(--card-hover); }
-    .opt.correct { border-color: var(--green); background: rgba(76, 154, 122, 0.15); color: #b7e3cf; }
-    .opt.wrong   { border-color: var(--red); background: rgba(204, 91, 74, 0.15); color: #f4b5a9; }
-    .feedback {
-      padding: 14px 18px;
-      border-radius: 16px;
-      font-weight: 500;
-      display: none;
-    }
-    .feedback.show { display: block; }
-    .feedback.good { background: rgba(76, 154, 122, 0.15); color: #b7e3cf; border: 1px solid var(--green); }
-    .feedback.bad  { background: rgba(204, 91, 74, 0.15); color: #f4b5a9; border: 1px solid var(--red); }
-    .primary-btn {
-      background: var(--gold-soft);
-      color: #121212;
-      font-weight: 700;
-      padding: 16px;
-      border: none;
-      border-radius: 30px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: opacity 0.1s;
-    }
-    .primary-btn:disabled { opacity: 0.3; cursor: default; }
+.reel-loading {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  height:100%; gap:14px; color:var(--muted);
+}
+.reel-loading .spinner {
+  width:28px; height:28px;
+  border:2px solid var(--border);
+  border-top-color:var(--gold);
+  border-radius:50%;
+  animation:spin .9s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
 
-    /* profile & empty */
-    .profile-hero {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 26px;
-      padding: 28px;
-      text-align: center;
-    }
-    .avatar {
-      width: 70px; height: 70px;
-      border-radius: 50%;
-      background: var(--accent-dim);
-      margin: 0 auto 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 32px;
-      color: #eee;
-    }
-    .profile-name { font-size: 22px; font-weight: 600; }
-    .profile-sub { color: var(--text-muted); font-size: 13px; }
-    .stat-row {
-      display: flex;
-      gap: 12px;
-    }
-    .stat-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 16px;
-      flex: 1;
-      text-align: center;
-    }
-    .stat-num { font-size: 28px; font-weight: 700; color: var(--gold-soft); line-height: 1; }
-    .stat-label { font-size: 10px; color: var(--text-muted); }
+.scroll-cue {
+  position:absolute; bottom:24px; left:50%;
+  transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:5px;
+  color:var(--muted); font-size:9.5px; letter-spacing:.12em; text-transform:uppercase;
+  animation:bob 2.4s ease-in-out infinite; opacity:.5;
+}
+.scroll-cue svg { width:15px; height:15px; }
+@keyframes bob {
+  0%,100% { transform:translateX(-50%) translateY(0); }
+  55% { transform:translateX(-50%) translateY(6px); }
+}
 
-    .menu-item {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      padding: 14px 16px;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 14px;
-      margin-bottom: 6px;
-      cursor: pointer;
-    }
-    .empty-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 50px 20px;
-      color: var(--text-muted);
-      text-align: center;
-    }
+/* ─── FAVOURITES ─── */
+.empty-state {
+  flex:1; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:14px; padding:60px 40px; text-align:center; color:var(--muted);
+}
+.empty-state svg { width:44px; height:44px; opacity:.3; }
+.empty-state h3 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:22px; color:var(--cream-dim); font-weight:500;
+}
+.empty-state p { font-size:13px; line-height:1.65; max-width:250px; }
 
-    /* overlay */
-    .overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.8);
-      backdrop-filter: blur(8px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 200;
-    }
-    .sheet {
-      width: 90%;
-      max-width: 440px;
-      background: var(--surface);
-      border-radius: 32px;
-      padding: 32px;
-      border: 1px solid var(--border-light);
-    }
-    .field { margin-bottom: 16px; }
-    .field label { font-size: 11px; color: var(--text-muted); }
-    .field input {
-      width: 100%;
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 14px;
-      color: white;
-      font-size: 15px;
-      outline: none;
-    }
-    .toast {
-      position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-      background: var(--card-hover);
-      border: 1px solid var(--border-light);
-      color: var(--gold-soft);
-      padding: 12px 28px;
-      border-radius: 50px;
-      font-weight: 500;
-      z-index: 300;
-      transition: opacity 0.2s;
-      opacity: 0;
-      pointer-events: none;
-    }
-    .toast.show { opacity: 1; }
-    .pts-popup {
-      position: fixed; top: 45%; left: 50%; transform: translate(-50%,-50%) scale(0.8);
-      background: var(--surface);
-      border: 2px solid var(--gold);
-      border-radius: 40px;
-      padding: 30px 50px;
-      text-align: center;
-      transition: transform 0.25s;
-      z-index: 400;
-    }
-    .pts-popup.show { transform: translate(-50%,-50%) scale(1); }
-    .pts-number { font-size: 56px; font-weight: 800; color: var(--gold-soft); }
-  </style>
+/* ─── GAME ─── */
+#page-game { padding:18px; padding-bottom:32px; gap:12px; }
+
+.game-hdr {
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:16px 20px;
+}
+.g-score-lbl { font-size:10px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
+.g-score {
+  font-family:'Cormorant Garamond', serif;
+  font-size:38px; color:var(--gold); font-weight:600; line-height:1;
+}
+.streak-badge {
+  background:linear-gradient(135deg,#b84a1e,#d97826);
+  border-radius:100px; padding:7px 14px;
+  font-size:12.5px; font-weight:600; color:#fff;
+  display:flex; align-items:center; gap:6px;
+  font-family:'DM Sans', sans-serif;
+}
+
+.game-verse-box {
+  background:var(--card); border:1px solid var(--border-hi);
+  border-radius:18px; padding:26px 22px;
+  text-align:center; position:relative; overflow:hidden;
+}
+.game-verse-box::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 0%, rgba(201,168,76,.07) 0%, transparent 60%);
+  pointer-events:none;
+}
+.game-verse-text {
+  font-family:'Cormorant Garamond', serif;
+  font-size:18px; line-height:1.75; color:var(--cream);
+  font-style:italic; font-weight:400; position:relative; z-index:1;
+}
+
+.phase-lbl {
+  font-size:10px; letter-spacing:.15em; text-transform:uppercase;
+  color:var(--gold-dk); font-weight:600; text-align:center; margin-top:2px;
+}
+
+.opts { display:flex; flex-direction:column; gap:8px; }
+.opt-btn {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:12px; padding:13px 16px;
+  color:var(--text); font-family:'DM Sans',sans-serif;
+  font-size:14px; font-weight:400; cursor:pointer;
+  transition:border-color .2s, background .2s, transform .1s;
+  text-align:left;
+}
+.opt-btn:hover:not(:disabled) { border-color:var(--border-hi); background:var(--card2); }
+.opt-btn:active:not(:disabled) { transform:scale(.98); }
+.opt-btn.correct { border-color:var(--green); background:rgba(39,174,96,.10); color:#4ade80; }
+.opt-btn.wrong   { border-color:var(--red);   background:rgba(192,57,43,.10); color:#f87171; }
+
+.feedback {
+  border-radius:12px; padding:13px 16px;
+  font-size:13px; font-weight:500; text-align:center;
+  display:none; font-family:'DM Sans',sans-serif;
+}
+.feedback.show { display:block; }
+.feedback.good { background:rgba(39,174,96,.10); color:#4ade80; border:1px solid rgba(39,174,96,.25); }
+.feedback.bad  { background:rgba(192,57,43,.10); color:#f87171; border:1px solid rgba(192,57,43,.25); }
+
+.primary-btn {
+  width:100%;
+  background:linear-gradient(135deg,var(--gold-dk),var(--gold));
+  border:none; border-radius:13px; padding:15px;
+  color:#09090b; font-family:'DM Sans',sans-serif;
+  font-size:15px; font-weight:600; cursor:pointer;
+  transition:opacity .2s, transform .15s;
+  letter-spacing:.02em;
+}
+.primary-btn:active { transform:scale(.98); }
+.primary-btn:disabled { opacity:.3; cursor:default; }
+
+/* ─── PROFILE ─── */
+#page-profile { padding:18px; gap:13px; padding-bottom:32px; }
+
+.profile-hero {
+  background:linear-gradient(160deg,#13131a,#1c1828,#13131a);
+  border:1px solid var(--border); border-radius:20px;
+  padding:30px 24px; text-align:center; position:relative; overflow:hidden;
+}
+.profile-hero::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 10%, rgba(201,168,76,.08) 0%, transparent 55%);
+}
+.avatar {
+  width:70px; height:70px; border-radius:50%;
+  border:1.5px solid var(--gold-dk);
+  background:var(--card2);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Cormorant Garamond',serif; font-size:30px;
+  font-weight:500; color:var(--gold);
+  margin:0 auto 14px; position:relative; z-index:1;
+}
+.profile-name {
+  font-family:'Cormorant Garamond',serif;
+  font-size:24px; font-weight:500; color:var(--cream);
+  position:relative; z-index:1;
+}
+.profile-sub { font-size:12px; color:var(--muted); margin-top:4px; z-index:1; position:relative; }
+
+.stats-row { display:flex; gap:10px; }
+.stat-card {
+  flex:1; background:var(--card); border:1px solid var(--border);
+  border-radius:14px; padding:16px 10px; text-align:center;
+}
+.stat-val {
+  font-family:'Cormorant Garamond',serif;
+  font-size:32px; color:var(--gold); font-weight:600; line-height:1;
+}
+.stat-lbl { font-size:10px; color:var(--muted); margin-top:5px; letter-spacing:.08em; text-transform:uppercase; }
+
+.menu-section {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; overflow:hidden;
+}
+.menu-item {
+  display:flex; align-items:center; padding:15px 18px; gap:13px;
+  border-bottom:1px solid var(--border); cursor:pointer;
+  transition:background .2s;
+}
+.menu-item:last-child { border-bottom:none; }
+.menu-item:hover { background:var(--card2); }
+.menu-icon {
+  width:36px; height:36px; border-radius:10px;
+  background:rgba(201,168,76,.07);
+  display:flex; align-items:center; justify-content:center;
+  color:var(--gold); flex-shrink:0;
+}
+.menu-icon svg { width:15px; height:15px; }
+.menu-label { flex:1; font-size:14px; font-weight:400; }
+.menu-value { font-size:12px; color:var(--muted); }
+.chevron { color:var(--muted); }
+.chevron svg { width:12px; height:12px; }
+
+/* ─── AUTH ─── */
+.overlay {
+  position:fixed; inset:0;
+  background:rgba(0,0,0,.80); backdrop-filter:blur(10px);
+  display:none; align-items:flex-end; justify-content:center; z-index:200;
+}
+.overlay.show { display:flex; }
+.sheet {
+  width:100%; max-width:520px;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:22px 22px 0 0; padding:30px 24px;
+  padding-bottom:calc(30px + env(safe-area-inset-bottom,0));
+  position:relative;
+}
+.sheet h2 {
+  font-family:'Cormorant Garamond',serif;
+  font-size:28px; font-weight:500; color:var(--cream); margin-bottom:22px;
+}
+.field { margin-bottom:14px; }
+.field label { display:block; font-size:10.5px; color:var(--muted); margin-bottom:6px; letter-spacing:.10em; text-transform:uppercase; }
+.field input {
+  width:100%; background:var(--card); border:1px solid var(--border);
+  border-radius:11px; padding:13px 15px; color:var(--text);
+  font-size:14px; font-family:'DM Sans',sans-serif; outline:none;
+  transition:border-color .2s;
+}
+.field input:focus { border-color:var(--gold-dk); }
+.sheet-btn {
+  width:100%; background:linear-gradient(135deg,var(--gold-dk),var(--gold));
+  border:none; border-radius:12px; padding:15px;
+  color:#09090b; font-family:'DM Sans',sans-serif;
+  font-size:15px; font-weight:600; cursor:pointer; margin-top:6px;
+}
+.auth-toggle { text-align:center; margin-top:14px; font-size:13px; color:var(--muted); }
+.auth-toggle a { color:var(--gold); cursor:pointer; }
+.x-btn {
+  position:absolute; top:14px; right:16px;
+  background:var(--card); border:none; width:30px; height:30px;
+  border-radius:50%; color:var(--muted); cursor:pointer;
+  display:flex; align-items:center; justify-content:center; font-size:16px;
+}
+
+/* ─── TOAST ─── */
+.toast {
+  position:fixed; bottom:calc(var(--TAB) + 16px); left:50%;
+  transform:translateX(-50%) translateY(8px);
+  background:var(--card2); border:1px solid var(--border-hi);
+  border-radius:100px; padding:9px 18px;
+  font-size:13px; font-weight:500; color:var(--gold);
+  white-space:nowrap; z-index:500;
+  opacity:0; transition:opacity .25s, transform .25s;
+  pointer-events:none; letter-spacing:.01em;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+@media (min-width:760px) { .toast { bottom:18px; } }
+
+/* ─── POINTS POPUP ─── */
+.pts-popup {
+  position:fixed; top:50%; left:50%;
+  transform:translate(-50%,-50%) scale(0);
+  background:var(--card2); border:1.5px solid var(--gold);
+  border-radius:20px; padding:30px 42px; text-align:center;
+  z-index:400; transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  pointer-events:none;
+}
+.pts-popup.show { transform:translate(-50%,-50%) scale(1); }
+.pts-popup .pts {
+  font-family:'Cormorant Garamond',serif;
+  font-size:52px; color:var(--gold); font-weight:600; line-height:1;
+}
+.pts-popup .pts-lbl { font-size:12px; color:var(--muted); margin-top:7px; }
+
+/* ─── RIGHT PANEL ─── */
+.panel-section {
+  background:var(--card); border:1px solid var(--border);
+  border-radius:16px; padding:18px 16px;
+}
+.panel-title {
+  font-family:'Cormorant Garamond',serif;
+  font-size:16px; font-weight:500; color:var(--cream); margin-bottom:14px;
+}
+.panel-verse { margin-bottom:13px; padding-bottom:13px; border-bottom:1px solid var(--border); }
+.panel-verse:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+.panel-verse-text {
+  font-family:'Cormorant Garamond',serif;
+  font-size:13.5px; line-height:1.65; color:var(--cream);
+  font-style:italic; margin-bottom:5px; font-weight:400;
+}
+.panel-verse-ref { font-size:10px; color:var(--gold); font-weight:600; letter-spacing:.06em; }
+</style>
 </head>
 <body>
-<div id="shell">
-  <!-- SIDEBAR (desktop, always visible) -->
-  <div id="sidebar">
-    <div class="logo">Faith<span>Flow</span></div>
-    <button class="side-btn active" data-tab="home"><svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home</button>
-    <button class="side-btn" data-tab="verses"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Verses</button>
-    <button class="side-btn" data-tab="favourites"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Saved</button>
-    <button class="side-btn" data-tab="game"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M12 12h.01M17 12h.01M7 10v4M5 12h4"/></svg>Game</button>
-    <button class="side-btn" data-tab="profile"><svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile</button>
-  </div>
 
-  <!-- CENTER PANE -->
+<div id="shell">
+  <!-- Sidebar -->
+  <nav id="sidebar">
+    <div class="sidebar-logo">Faith<em>Flow</em></div>
+    <button class="side-tab active" data-tab="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home
+    </button>
+    <button class="side-tab" data-tab="verses">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Verses
+    </button>
+    <button class="side-tab" data-tab="favourites">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Saved
+    </button>
+    <div class="side-divider"></div>
+    <button class="side-tab" data-tab="game">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M12 12h.01M17 12h.01M7 10v4M5 12h4"/></svg>Game
+    </button>
+    <button class="side-tab" data-tab="profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile
+    </button>
+  </nav>
+
+  <!-- Center Pane -->
   <div id="pane">
     <div id="topbar">
-      <div class="app-logo-mobile"></div>
+      <div class="app-logo">Faith<em>Flow</em></div>
       <span class="page-title" id="topbar-title">Home</span>
-      <div style="width:20px"></div>
+      <div style="width:80px"></div>
     </div>
 
     <div id="pages">
+
       <!-- HOME -->
       <div class="page active" id="page-home">
-        <div class="daily-hero">
-          <div class="daily-label">Verse of the day</div>
+        <div class="daily-card">
+          <div class="daily-tag">Verse of the Day</div>
           <div class="daily-text" id="daily-text">…</div>
-          <div class="daily-ref" id="daily-ref">—</div>
-          <div class="pill-group">
-            <button class="pill" id="daily-fav-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" id="daily-fav-svg"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> <span id="daily-fav-label">Save</span></button>
-            <button class="pill" id="daily-share-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>Share</button>
+          <div class="daily-ref"  id="daily-ref">—</div>
+          <div class="daily-actions">
+            <button class="pill" id="btn-daily-fav">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="daily-fav-svg"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              <span id="daily-fav-lbl">Save</span>
+            </button>
+            <button class="pill" id="btn-daily-share">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+              Share
+            </button>
           </div>
         </div>
-        <div class="section-label">TRENDING</div>
+
+        <div class="sec-label">Beloved by the Community</div>
         <div id="trending-list"></div>
       </div>
 
       <!-- VERSES REEL -->
       <div class="page" id="page-verses">
-        <div id="reel-wrap"></div>
+        <div id="reel-wrap">
+          <div class="reel-loading" id="reel-loading">
+            <div class="spinner"></div>
+            <span style="font-size:12px;letter-spacing:.08em;text-transform:uppercase">Loading verses…</span>
+          </div>
+        </div>
       </div>
 
       <!-- FAVOURITES -->
       <div class="page" id="page-favourites">
-        <div class="section-label">SAVED VERSES</div>
+        <div class="sec-label">My Saved Verses</div>
         <div id="fav-list"></div>
       </div>
 
       <!-- GAME -->
       <div class="page" id="page-game">
-        <div class="game-header">
-          <div class="score-box"><span class="score-label">POINTS</span><div class="score-number" id="game-score">0</div></div>
+        <div class="game-hdr">
+          <div>
+            <div class="g-score-lbl">Total Points</div>
+            <div class="g-score" id="g-score">0</div>
+          </div>
           <div class="streak-badge" id="streak-badge" style="display:none">🔥 <span id="streak-n">0</span></div>
         </div>
         <div class="game-verse-box">
-          <div class="verse-text" id="g-verse-text">Press start</div>
+          <div class="game-verse-text" id="g-verse">Press "New Verse" to begin</div>
         </div>
-        <div class="phase-label" id="g-phase"></div>
-        <div class="options" id="g-options"></div>
+        <div id="g-phase-label" class="phase-lbl"></div>
+        <div class="opts" id="g-opts"></div>
         <div class="feedback" id="g-feedback"></div>
-        <button class="primary-btn" id="g-next">New verse →</button>
+        <button class="primary-btn" id="g-next-btn">New Verse →</button>
       </div>
 
       <!-- PROFILE -->
@@ -602,231 +702,632 @@
         <div class="profile-hero">
           <div class="avatar" id="p-avatar">✦</div>
           <div class="profile-name" id="p-name">Guest</div>
-          <div class="profile-sub" id="p-sub">Sign in to save</div>
+          <div class="profile-sub"  id="p-sub">Join FaithFlow to save your progress</div>
         </div>
-        <div class="stat-row">
-          <div class="stat-card"><span class="stat-num" id="stat-points">0</span><span class="stat-label">Points</span></div>
-          <div class="stat-card"><span class="stat-num" id="stat-favs">0</span><span class="stat-label">Saved</span></div>
-          <div class="stat-card"><span class="stat-num" id="stat-streak">0</span><span class="stat-label">Streak</span></div>
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-val" id="s-pts">0</div><div class="stat-lbl">Points</div></div>
+          <div class="stat-card"><div class="stat-val" id="s-favs">0</div><div class="stat-lbl">Saved</div></div>
+          <div class="stat-card"><div class="stat-val" id="s-streak">0</div><div class="stat-lbl">Streak</div></div>
         </div>
-        <div class="menu-item" id="menu-login"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg> Sign in / Register</div>
-        <div class="menu-item" id="menu-logout" style="display:none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg> Sign out</div>
-        <div class="menu-item" id="menu-go-favs"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> Saved verses <span id="fav-count-menu">0</span></div>
-        <div class="menu-item" id="menu-go-game"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M12 12h.01M17 12h.01M7 10v4M5 12h4"/></svg> Play trivia</div>
+        <div class="menu-section">
+          <div class="menu-item" id="menu-login">
+            <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg></div>
+            <span class="menu-label">Sign In / Register</span>
+            <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+          <div class="menu-item" id="menu-logout" style="display:none">
+            <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></div>
+            <span class="menu-label">Sign Out</span>
+            <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+        </div>
+        <div class="menu-section">
+          <div class="menu-item" id="menu-go-favs">
+            <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+            <span class="menu-label">Saved Verses</span>
+            <span class="menu-value" id="fav-count-lbl">0 verses</span>
+            <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+          <div class="menu-item" id="menu-go-game">
+            <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M12 12h.01M17 12h.01M7 10v4M5 12h4"/></svg></div>
+            <span class="menu-label">Play Verse Trivia</span>
+            <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--muted);letter-spacing:.04em">FaithFlow · NIV Bible · Made with ✦</div>
       </div>
+
     </div>
 
-    <!-- mobile tabbar hidden on desktop -->
-    <nav id="tabbar"></nav>
+    <!-- Mobile Tab Bar -->
+    <nav id="tabbar">
+      <button class="tab active" data-tab="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home
+      </button>
+      <button class="tab" data-tab="verses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Verses
+      </button>
+      <button class="tab" data-tab="favourites">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Saved
+      </button>
+      <button class="tab" data-tab="game">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M12 12h.01M17 12h.01M7 10v4M5 12h4"/></svg>Game
+      </button>
+      <button class="tab" data-tab="profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile
+      </button>
+    </nav>
   </div>
 
-  <!-- RIGHT PANEL (wide) -->
+  <!-- Right Panel -->
   <div id="panel">
-    <div style="background:var(--card); border-radius:20px; padding:20px;">
-      <div style="font-weight:600; margin-bottom:14px;">Quick verses</div>
-      <div id="panel-quick" style="display:flex; flex-direction:column; gap:16px;"></div>
+    <div class="panel-section">
+      <div class="panel-title">Quick Verses</div>
+      <div id="panel-verses"></div>
     </div>
-    <div style="color:var(--text-muted); font-size:13px; line-height:1.7; padding:0 8px;">FaithFlow — clean scripture, daily.</div>
+    <div class="panel-section" style="font-size:13px;color:var(--muted);line-height:1.75">
+      <div class="panel-title">About FaithFlow</div>
+      Scripture for your daily life. Save your favourite passages, explore the full Bible, and let the Word renew you every morning.
+    </div>
   </div>
 </div>
 
-<!-- auth overlay & toasts -->
+<!-- Auth overlay -->
 <div class="overlay" id="auth-overlay">
   <div class="sheet">
-    <h2 id="auth-title" style="margin-bottom:20px;">Welcome</h2>
-    <div class="field"><label>Email</label><input id="auth-email" type="email"></div>
-    <div class="field"><label>Password</label><input id="auth-pass" type="password"></div>
-    <div class="field" id="auth-name-wrap" style="display:none"><label>Name</label><input id="auth-name"></div>
-    <button class="primary-btn" id="auth-submit">Continue</button>
-    <div style="margin-top:14px;font-size:13px;color:var(--text-muted);text-align:center"><a id="auth-toggle" style="color:var(--gold);cursor:pointer;">Switch to register</a></div>
-    <button style="margin-top:12px;background:none;border:none;color:var(--text-muted);float:right" id="auth-close">✕</button>
+    <button class="x-btn" id="auth-close-btn">✕</button>
+    <h2 id="auth-title">Welcome Back</h2>
+    <div class="field"><label>Email</label><input type="email"     id="a-email"    placeholder="you@example.com"></div>
+    <div class="field"><label>Password</label><input type="password" id="a-pass"    placeholder="••••••••"></div>
+    <div class="field" id="a-name-wrap" style="display:none"><label>Name</label><input type="text" id="a-name" placeholder="Your name"></div>
+    <button class="sheet-btn" id="auth-submit-btn">Sign In</button>
+    <div class="auth-toggle" id="auth-toggle-line">Don't have an account? <a id="auth-mode-toggle">Register</a></div>
   </div>
 </div>
+
+<!-- Points popup -->
+<div class="pts-popup" id="pts-popup">
+  <div class="pts" id="pts-amount">+1</div>
+  <div class="pts-lbl" id="pts-lbl">Point earned!</div>
+</div>
+
+<!-- Toast -->
 <div class="toast" id="toast"></div>
-<div class="pts-popup" id="pts-popup"><div class="pts-number" id="pts-amount">+5</div><div style="color:var(--text-soft)">earned</div></div>
 
 <script>
-  (function(){
-    // ---- embedded verses (NIV like) same as original but cleaner ----
-    const VERSES = [
-      { text:"For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.", ref:"John 3:16", book:"John", ch:3, v:16, t:"NT" },
-      { text:"I can do all this through him who gives me strength.", ref:"Philippians 4:13", book:"Philippians", ch:4, v:13, t:"NT" },
-      { text:"The Lord is my shepherd, I lack nothing.", ref:"Psalms 23:1", book:"Psalms", ch:23, v:1, t:"OT" },
-      { text:"Trust in the Lord with all your heart and lean not on your own understanding.", ref:"Proverbs 3:5", book:"Proverbs", ch:3, v:5, t:"OT" },
-      { text:"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", ref:"Joshua 1:9", book:"Joshua", ch:1, v:9, t:"OT" },
-      { text:"And we know that in all things God works for the good of those who love him, who have been called according to his purpose.", ref:"Romans 8:28", book:"Romans", ch:8, v:28, t:"NT" },
-      { text:"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.", ref:"Philippians 4:6", book:"Philippians", ch:4, v:6, t:"NT" },
-      { text:"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.", ref:"Jeremiah 29:11", book:"Jeremiah", ch:29, v:11, t:"OT" },
-      { text:"Come to me, all you who are weary and burdened, and I will give you rest.", ref:"Matthew 11:28", book:"Matthew", ch:11, v:28, t:"NT" },
-      { text:"Love is patient, love is kind. It does not envy, it does not boast, it is not proud.", ref:"1 Corinthians 13:4", book:"1 Corinthians", ch:13, v:4, t:"NT" },
-      { text:"The Lord is my light and my salvation—whom shall I fear?", ref:"Psalms 27:1", book:"Psalms", ch:27, v:1, t:"OT" },
-      { text:"But those who hope in the Lord will renew their strength. They will soar on wings like eagles.", ref:"Isaiah 40:31", book:"Isaiah", ch:40, v:31, t:"OT" },
-      { text:"This is the day the Lord has made; let us rejoice and be glad in it.", ref:"Psalms 118:24", book:"Psalms", ch:118, v:24, t:"OT" },
-      { text:"Greater love has no one than this: to lay down one's life for one's friends.", ref:"John 15:13", book:"John", ch:15, v:13, t:"NT" },
-      { text:"Cast all your anxiety on him because he cares for you.", ref:"1 Peter 5:7", book:"1 Peter", ch:5, v:7, t:"NT" },
-      { text:"Even though I walk through the darkest valley, I will fear no evil, for you are with me.", ref:"Psalms 23:4", book:"Psalms", ch:23, v:4, t:"OT" },
-      { text:"For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline.", ref:"2 Timothy 1:7", book:"2 Timothy", ch:1, v:7, t:"NT" },
-      { text:"The steadfast love of the Lord never ceases; his mercies never come to an end; they are new every morning.", ref:"Lamentations 3:22-23", book:"Lamentations", ch:3, v:22, t:"OT" },
-      { text:"Ask and it will be given to you; seek and you will find; knock and the door will be opened to you.", ref:"Matthew 7:7", book:"Matthew", ch:7, v:7, t:"NT" },
-      { text:"I have hidden your word in my heart that I might not sin against you.", ref:"Psalms 119:11", book:"Psalms", ch:119, v:11, t:"OT" },
-      { text:"Be still, and know that I am God.", ref:"Psalms 46:10", book:"Psalms", ch:46, v:10, t:"OT" },
-      { text:"If God is for us, who can be against us?", ref:"Romans 8:31", book:"Romans", ch:8, v:31, t:"NT" },
-      { text:"He gives strength to the weary and increases the power of the weak.", ref:"Isaiah 40:29", book:"Isaiah", ch:40, v:29, t:"OT" },
-      { text:"Delight yourself in the Lord, and he will give you the desires of your heart.", ref:"Psalms 37:4", book:"Psalms", ch:37, v:4, t:"OT" },
-      { text:"Jesus answered, 'I am the way and the truth and the life. No one comes to the Father except through me.'", ref:"John 14:6", book:"John", ch:14, v:6, t:"NT" }
-    ];
-    const OT_BOOKS = ['Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth','1 Samuel','2 Samuel','1 Kings','2 Kings','Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos','Jonah','Psalms','Proverbs','Ecclesiastes'];
-    const NT_BOOKS = ['Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Corinthians','Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians','1 Timothy','2 Timothy','Titus','Philemon','Hebrews','James','1 Peter','2 Peter','1 John','2 John','3 John','Jude','Revelation'];
+// ═══════════════════════════════════════════════
+//  EMBEDDED VERSES (fallback)
+// ═══════════════════════════════════════════════
+const EMBEDDED_VERSES = [
+  { text:"For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.", ref:"John 3:16", book:"John", ch:3, v:16, t:"NT" },
+  { text:"I can do all this through him who gives me strength.", ref:"Philippians 4:13", book:"Philippians", ch:4, v:13, t:"NT" },
+  { text:"The Lord is my shepherd, I lack nothing.", ref:"Psalms 23:1", book:"Psalms", ch:23, v:1, t:"OT" },
+  { text:"Trust in the Lord with all your heart and lean not on your own understanding.", ref:"Proverbs 3:5", book:"Proverbs", ch:3, v:5, t:"OT" },
+  { text:"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", ref:"Joshua 1:9", book:"Joshua", ch:1, v:9, t:"OT" },
+  { text:"And we know that in all things God works for the good of those who love him, who have been called according to his purpose.", ref:"Romans 8:28", book:"Romans", ch:8, v:28, t:"NT" },
+  { text:"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.", ref:"Philippians 4:6", book:"Philippians", ch:4, v:6, t:"NT" },
+  { text:"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.", ref:"Jeremiah 29:11", book:"Jeremiah", ch:29, v:11, t:"OT" },
+  { text:"Come to me, all you who are weary and burdened, and I will give you rest.", ref:"Matthew 11:28", book:"Matthew", ch:11, v:28, t:"NT" },
+  { text:"Love is patient, love is kind. It does not envy, it does not boast, it is not proud.", ref:"1 Corinthians 13:4", book:"1 Corinthians", ch:13, v:4, t:"NT" },
+  { text:"In the beginning God created the heavens and the earth.", ref:"Genesis 1:1", book:"Genesis", ch:1, v:1, t:"OT" },
+  { text:"The Lord is my light and my salvation—whom shall I fear? The Lord is the stronghold of my life—of whom shall I be afraid?", ref:"Psalms 27:1", book:"Psalms", ch:27, v:1, t:"OT" },
+  { text:"But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.", ref:"Isaiah 40:31", book:"Isaiah", ch:40, v:31, t:"OT" },
+  { text:"This is the day the Lord has made; let us rejoice and be glad in it.", ref:"Psalms 118:24", book:"Psalms", ch:118, v:24, t:"OT" },
+  { text:"Greater love has no one than this: to lay down one's life for one's friends.", ref:"John 15:13", book:"John", ch:15, v:13, t:"NT" },
+  { text:"Rejoice in the Lord always. I will say it again: Rejoice!", ref:"Philippians 4:4", book:"Philippians", ch:4, v:4, t:"NT" },
+  { text:"Cast all your anxiety on him because he cares for you.", ref:"1 Peter 5:7", book:"1 Peter", ch:5, v:7, t:"NT" },
+  { text:"Even though I walk through the darkest valley, I will fear no evil, for you are with me; your rod and your staff, they comfort me.", ref:"Psalms 23:4", book:"Psalms", ch:23, v:4, t:"OT" },
+  { text:"For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline.", ref:"2 Timothy 1:7", book:"2 Timothy", ch:1, v:7, t:"NT" },
+  { text:"The steadfast love of the Lord never ceases; his mercies never come to an end; they are new every morning; great is your faithfulness.", ref:"Lamentations 3:22", book:"Lamentations", ch:3, v:22, t:"OT" },
+  { text:"Ask and it will be given to you; seek and you will find; knock and the door will be opened to you.", ref:"Matthew 7:7", book:"Matthew", ch:7, v:7, t:"NT" },
+  { text:"I have hidden your word in my heart that I might not sin against you.", ref:"Psalms 119:11", book:"Psalms", ch:119, v:11, t:"OT" },
+  { text:"Be still, and know that I am God.", ref:"Psalms 46:10", book:"Psalms", ch:46, v:10, t:"OT" },
+  { text:"If God is for us, who can be against us?", ref:"Romans 8:31", book:"Romans", ch:8, v:31, t:"NT" },
+  { text:"He gives strength to the weary and increases the power of the weak.", ref:"Isaiah 40:29", book:"Isaiah", ch:40, v:29, t:"OT" },
+  { text:"Delight yourself in the Lord, and he will give you the desires of your heart.", ref:"Psalms 37:4", book:"Psalms", ch:37, v:4, t:"OT" },
+  { text:"Jesus answered, 'I am the way and the truth and the life. No one comes to the Father except through me.'", ref:"John 14:6", book:"John", ch:14, v:6, t:"NT" },
+  { text:"The Lord your God is with you, the Mighty Warrior who saves.", ref:"Zephaniah 3:17", book:"Zephaniah", ch:3, v:17, t:"OT" },
+  { text:"No temptation has overtaken you except what is common to mankind. And God is faithful.", ref:"1 Corinthians 10:13", book:"1 Corinthians", ch:10, v:13, t:"NT" },
+  { text:"The name of the Lord is a fortified tower; the righteous run to it and are safe.", ref:"Proverbs 18:10", book:"Proverbs", ch:18, v:10, t:"OT" },
+];
 
-    // state
-    let ST = { user:null, users:{}, favs:[], score:0, streak:0 };
-    try { let s=localStorage.getItem('ff_clean'); if(s) ST=JSON.parse(s); } catch{}
-    function save(){ localStorage.setItem('ff_clean',JSON.stringify(ST)); }
+const OT_BOOKS = ['Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth','1 Samuel','2 Samuel','1 Kings','2 Kings','1 Chronicles','2 Chronicles','Ezra','Nehemiah','Esther','Job','Psalms','Proverbs','Ecclesiastes','Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi'];
+const NT_BOOKS = ['Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Corinthians','Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians','1 Timothy','2 Timothy','Titus','Philemon','Hebrews','James','1 Peter','2 Peter','1 John','2 John','3 John','Jude','Revelation'];
+const ALL_BOOKS = [...OT_BOOKS, ...NT_BOOKS];
+const BIBLE_BASE_PATH = './NIV/NIV Books/';
 
-    // helpers
-    function isFav(ref){ return ST.favs.some(f=>f.ref===ref); }
-    function toggleFav(v){ 
-      if(isFav(v.ref)) ST.favs = ST.favs.filter(f=>f.ref!==v.ref);
-      else ST.favs.unshift({ref:v.ref,text:v.text,book:v.book,ch:v.ch,v:v.v,t:v.t});
-      save(); updateFavCount(); renderFavs(); refreshUI(); 
-    }
-    function updateFavCount(){
-      let n=ST.favs.length;
-      document.getElementById('stat-favs').textContent=n;
-      let m=document.getElementById('fav-count-menu'); if(m) m.textContent=n+' verses';
-    }
-    function showToast(m){ let t=document.getElementById('toast'); t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2000); }
-    function shareVerse(text,ref){ let msg=`"${text}" — ${ref}`; if(navigator.share) navigator.share({text:msg}); else navigator.clipboard?.writeText(msg).then(()=>showToast('copied')); }
+// ═══════════════════════════════════════════════
+//  GLOBAL VERSE POOL (for reel)
+// ═══════════════════════════════════════════════
+let REEL_VERSES = []; // filled async
+let reelBuilt = false;
 
-    // tabs
-    let current='home';
-    function switchTab(t){
-      current=t;
-      document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-      document.getElementById('page-'+t).classList.add('active');
-      document.querySelectorAll('.side-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===t));
-      document.getElementById('topbar-title').innerText=t[0].toUpperCase()+t.slice(1);
-      if(t==='verses' && !window.reelBuilt) { buildReel(); window.reelBuilt=true; }
-      if(t==='favourites') renderFavs();
-      if(t==='profile') updateProfile();
-    }
-    document.querySelectorAll('[data-tab]').forEach(el=>el.addEventListener('click',()=>switchTab(el.dataset.tab)));
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+function loadState() {
+  try { const s = localStorage.getItem('ff3_state'); return s ? JSON.parse(s) : fresh(); }
+  catch { return fresh(); }
+}
+function fresh() { return { user:null, users:{}, favs:[], globalFavCounts:{}, score:0, streak:0 }; }
+function save() { try { localStorage.setItem('ff3_state', JSON.stringify(ST)); } catch{} }
+const ST = loadState();
+if (!ST.globalFavCounts) ST.globalFavCounts = {};
 
-    // daily index
-    function dayIdx(){ let d=new Date(); return (d.getFullYear()*1000+d.getMonth()*31+d.getDate())%VERSES.length; }
+// ═══════════════════════════════════════════════
+//  UTILS
+// ═══════════════════════════════════════════════
+const shuffle = a => [...a].sort(() => Math.random()-.5);
+const rand = a => a[Math.floor(Math.random()*a.length)];
+const dayIdx = () => { const d=new Date(); return (d.getFullYear()*1000+d.getMonth()*31+d.getDate())%EMBEDDED_VERSES.length; };
 
-    // home init
-    function initHome(){
-      let dv=VERSES[dayIdx()];
-      document.getElementById('daily-text').textContent=dv.text;
-      document.getElementById('daily-ref').textContent='— '+dv.ref;
-      refreshDaily();
-      document.getElementById('daily-fav-btn').addEventListener('click',()=>{ toggleFav(dv); refreshDaily(); });
-      document.getElementById('daily-share-btn').addEventListener('click',()=>shareVerse(dv.text,dv.ref));
-      // trending
-      let list=document.getElementById('trending-list'); list.innerHTML='';
-      [...VERSES].sort(()=>Math.random()-.5).slice(0,5).forEach(v=>list.appendChild(renderVCard(v)));
-      // right panel quick
-      let q=document.getElementById('panel-quick'); q.innerHTML='';
-      [...VERSES].sort(()=>Math.random()-.5).slice(0,3).forEach(v=>{
-        let d=document.createElement('div'); d.innerHTML=`<div style="font-style:italic; margin-bottom:4px;">${v.text.slice(0,60)}…</div><div style="color:var(--gold-soft);font-size:11px;">${v.ref}</div>`;
-        q.appendChild(d);
+let toastT;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(()=>el.classList.remove('show'), 2600);
+}
+
+function doShare(text, ref) {
+  const msg = `"${text}" — ${ref}\n\nFrom FaithFlow`;
+  if (navigator.share) navigator.share({text:msg}).catch(()=>{});
+  else navigator.clipboard.writeText(msg).then(()=>toast('Copied to clipboard ✓')).catch(()=>toast('Could not copy'));
+}
+
+function heartSvg(f) {
+  return `<svg viewBox="0 0 24 24" fill="${f?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>`;
+}
+function shareSvg() {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>`;
+}
+
+// ═══════════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════════
+let currentTab = 'home';
+const TITLES = { home:'Home', verses:'Verses', favourites:'Saved', game:'Game', profile:'Profile' };
+
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+tab).classList.add('active');
+  document.querySelectorAll('[data-tab]').forEach(t => t.classList.toggle('active', t.dataset.tab===tab));
+  document.getElementById('topbar-title').textContent = TITLES[tab]||'';
+  if (tab==='verses' && !reelBuilt) initReel();
+  if (tab==='favourites') renderFavs();
+  if (tab==='profile') updateProfile();
+}
+document.querySelectorAll('[data-tab]').forEach(el => el.addEventListener('click', ()=>switchTab(el.dataset.tab)));
+
+// ═══════════════════════════════════════════════
+//  FAVOURITES LOGIC
+// ═══════════════════════════════════════════════
+const isFav = ref => ST.favs.some(f=>f.ref===ref);
+
+function toggleFav(ref, text, book, ch, v, t) {
+  if (isFav(ref)) {
+    ST.favs = ST.favs.filter(f=>f.ref!==ref);
+    // decrement global count
+    if (ST.globalFavCounts[ref] > 0) ST.globalFavCounts[ref]--;
+    toast('Removed from saved');
+  } else {
+    ST.favs.unshift({ref,text,book,ch,v,t,at:Date.now()});
+    // increment global count
+    ST.globalFavCounts[ref] = (ST.globalFavCounts[ref]||0)+1;
+    toast('Saved ✦');
+  }
+  save(); syncFavCount();
+}
+
+function syncFavCount() {
+  const n = ST.favs.length;
+  document.getElementById('fav-count-lbl').textContent = n+' verse'+(n!==1?'s':'');
+  document.getElementById('s-favs').textContent = n;
+}
+
+// ═══════════════════════════════════════════════
+//  HOME
+// ═══════════════════════════════════════════════
+function initHome() {
+  // Daily verse
+  const daily = EMBEDDED_VERSES[dayIdx()];
+  document.getElementById('daily-text').textContent = daily.text;
+  document.getElementById('daily-ref').textContent = '— '+daily.ref;
+  refreshDailyBtn();
+  document.getElementById('btn-daily-fav').addEventListener('click',()=>{
+    const d=EMBEDDED_VERSES[dayIdx()];
+    toggleFav(d.ref,d.text,d.book,d.ch,d.v,d.t);
+    refreshDailyBtn();
+  });
+  document.getElementById('btn-daily-share').addEventListener('click',()=>{
+    const d=EMBEDDED_VERSES[dayIdx()]; doShare(d.text,d.ref);
+  });
+
+  // Trending: sort by global fav count descending
+  renderTrending();
+
+  // Right panel quick verses
+  const pv = document.getElementById('panel-verses');
+  shuffle(EMBEDDED_VERSES).slice(0,4).forEach(v=>{
+    const d=document.createElement('div'); d.className='panel-verse';
+    d.innerHTML=`<div class="panel-verse-text">${v.text}</div><div class="panel-verse-ref">${v.ref}</div>`;
+    pv.appendChild(d);
+  });
+}
+
+function renderTrending() {
+  const list = document.getElementById('trending-list');
+  list.innerHTML='';
+  // Sort embedded verses by how many times they've been favourited globally
+  const sorted = [...EMBEDDED_VERSES].sort((a,b)=>{
+    const ca = ST.globalFavCounts[a.ref]||0;
+    const cb = ST.globalFavCounts[b.ref]||0;
+    return cb - ca;
+  });
+  // Show top 6 (if none have been faved, show random selection)
+  const hasAnyFavs = sorted.some(v=>(ST.globalFavCounts[v.ref]||0)>0);
+  const pool = hasAnyFavs ? sorted.slice(0,8) : shuffle(sorted).slice(0,6);
+  pool.forEach(v => list.appendChild(makeVCard(v)));
+}
+
+function refreshDailyBtn() {
+  const d=EMBEDDED_VERSES[dayIdx()], f=isFav(d.ref);
+  const btn=document.getElementById('btn-daily-fav');
+  document.getElementById('daily-fav-svg').setAttribute('fill',f?'currentColor':'none');
+  document.getElementById('daily-fav-lbl').textContent=f?'Saved':'Save';
+  btn.className='pill'+(f?' pill-saved':'');
+}
+
+function makeVCard(v) {
+  const div=document.createElement('div'); div.className='vcard';
+  const count = ST.globalFavCounts[v.ref]||0;
+  const f = isFav(v.ref);
+  div.innerHTML=`
+    <div class="vcard-head">
+      <div>
+        <div class="vcard-text">${v.text}</div>
+        <div class="vcard-ref">${v.ref}</div>
+      </div>
+      ${count>0?`<div class="fav-count-badge">${heartSvg(true)}<span>${count}</span></div>`:''}
+    </div>
+    <div class="vcard-actions">
+      <button class="act-btn fav-act${f?' saved':''}">${heartSvg(f)}<span>${f?'Saved':'Save'}</span></button>
+      <button class="act-btn share-act">${shareSvg()} Share</button>
+    </div>`;
+  div.querySelector('.fav-act').addEventListener('click',function(){
+    toggleFav(v.ref,v.text,v.book,v.ch,v.v,v.t);
+    const fn=isFav(v.ref);
+    this.className='act-btn fav-act'+(fn?' saved':'');
+    this.innerHTML=heartSvg(fn)+`<span>${fn?'Saved':'Save'}</span>`;
+    // refresh trending counts
+    renderTrending();
+  });
+  div.querySelector('.share-act').addEventListener('click',()=>doShare(v.text,v.ref));
+  return div;
+}
+
+// ═══════════════════════════════════════════════
+//  REEL — try to load from Bible JSON files first
+// ═══════════════════════════════════════════════
+async function initReel() {
+  reelBuilt = true;
+  // Try loading from Bible folder
+  let loaded = false;
+  try {
+    loaded = await tryLoadBibleFolder();
+  } catch(e) {}
+
+  if (!loaded || REEL_VERSES.length < 10) {
+    REEL_VERSES = shuffle(EMBEDDED_VERSES);
+  }
+  buildReel();
+}
+
+async function tryLoadBibleFolder() {
+  // Attempt to fetch a book index or test a known book
+  const testBook = 'John';
+  const url = BIBLE_BASE_PATH + testBook + '.json';
+  const resp = await fetch(url, {cache:'no-cache'});
+  if (!resp.ok) return false;
+
+  // Load several books to get a good pool
+  const books = shuffle(ALL_BOOKS).slice(0, 10);
+  const promises = books.map(async bk => {
+    try {
+      const r = await fetch(BIBLE_BASE_PATH + bk + '.json');
+      if (!r.ok) return [];
+      const data = await r.json();
+      return extractVersesFromJson(data, bk);
+    } catch { return []; }
+  });
+
+  const results = await Promise.all(promises);
+  const flat = results.flat();
+  if (flat.length > 20) {
+    REEL_VERSES = shuffle(flat).slice(0, 200);
+    return true;
+  }
+  return false;
+}
+
+function extractVersesFromJson(data, bookName) {
+  // Support multiple common JSON structures for Bible files
+  const verses = [];
+  const isNT = NT_BOOKS.includes(bookName);
+  const t = isNT ? 'NT' : 'OT';
+
+  // Structure 1: { chapters: [ { chapter: 1, verses: [ {verse:1, text:"..."} ] } ] }
+  if (data.chapters) {
+    data.chapters.forEach(ch => {
+      const chNum = ch.chapter || ch.ch || 0;
+      const vlist = ch.verses || [];
+      vlist.forEach(vobj => {
+        const vNum = vobj.verse || vobj.v || 0;
+        const txt = (vobj.text || vobj.t || '').trim();
+        if (txt.length > 20) {
+          verses.push({ text:txt, ref:`${bookName} ${chNum}:${vNum}`, book:bookName, ch:chNum, v:vNum, t });
+        }
       });
-    }
-    function refreshDaily(){
-      let dv=VERSES[dayIdx()]; let f=isFav(dv.ref);
-      let svg=document.getElementById('daily-fav-svg'); svg.setAttribute('fill',f?'currentColor':'none');
-      document.getElementById('daily-fav-label').innerText=f?'Saved':'Save';
-    }
-    function renderVCard(v){
-      let div=document.createElement('div'); div.className='verse-card';
-      div.innerHTML=`<div class="verse-text">${v.text}</div><div class="verse-ref">${v.ref}</div><div class="card-actions"><button class="action-btn fav-act ${isFav(v.ref)?'saved':''}"><svg viewBox="0 0 24 24" fill="${isFav(v.ref)?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg> <span>${isFav(v.ref)?'Saved':'Save'}</span></button><button class="action-btn share-act"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg> Share</button></div>`;
-      div.querySelector('.fav-act').addEventListener('click',()=>{ toggleFav(v); div.replaceWith(renderVCard(v)); });
-      div.querySelector('.share-act').addEventListener('click',()=>shareVerse(v.text,v.ref));
-      return div;
-    }
-
-    // reel
-    function buildReel(){
-      let w=document.getElementById('reel-wrap'); w.innerHTML='';
-      [...VERSES].sort(()=>Math.random()-.5).forEach((v,i)=>{
-        let s=document.createElement('div'); s.className='reel-slide';
-        s.innerHTML=`<div class="reel-book">${v.t==='NT'?'NEW TESTAMENT':'OLD TESTAMENT'}</div><div class="reel-verse">${v.text}</div><div class="reel-ref">${v.ref}</div><div class="reel-actions"><button class="reel-btn fav-r"><svg viewBox="0 0 24 24" fill="${isFav(v.ref)?'currentColor':'none'}" stroke="currentColor"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg><span>${isFav(v.ref)?'Saved':'Save'}</span></button><button class="reel-btn share-r"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg><span>Share</span></button></div>`;
-        s.querySelector('.fav-r').addEventListener('click',()=>{ toggleFav(v); buildReel(); });
-        s.querySelector('.share-r').addEventListener('click',()=>shareVerse(v.text,v.ref));
-        w.appendChild(s);
-      });
-    }
-
-    // favourites render
-    function renderFavs(){
-      let list=document.getElementById('fav-list'); list.innerHTML='';
-      if(!ST.favs.length) list.innerHTML='<div class="empty-state">✦ no saved verses</div>';
-      else ST.favs.forEach(v=>list.appendChild(renderVCard(v)));
-    }
-
-    // game (simplified)
-    let gV=null, gPhase=0, gScoreRound=0, gDone=true;
-    function gameNext(){
-      if(gDone){
-        gV=VERSES[Math.floor(Math.random()*VERSES.length)];
-        gPhase=1; gScoreRound=0; gDone=false;
-        document.getElementById('g-verse-text').innerText=gV.text;
-        hideFB(); renderGamePhase();
-        document.getElementById('g-next').disabled=true;
-        document.getElementById('g-next').innerText='Skip';
+    });
+  }
+  // Structure 2: flat array { book, chapter, verse, text }
+  else if (Array.isArray(data)) {
+    data.forEach(item => {
+      const txt = (item.text||item.t||'').trim();
+      const chNum = item.chapter||item.ch||0;
+      const vNum = item.verse||item.v||0;
+      if (txt.length>20) {
+        verses.push({ text:txt, ref:`${bookName} ${chNum}:${vNum}`, book:bookName, ch:chNum, v:vNum, t });
       }
-    }
-    function renderGamePhase(){
-      let opts=[];
-      if(gPhase===1) opts=['Old Testament','New Testament'];
-      else if(gPhase===2){ let pool=gV.t==='NT'?NT_BOOKS:OT_BOOKS; opts=[gV.book, ...pool.filter(b=>b!==gV.book).sort(()=>Math.random()-.5).slice(0,3)]; }
-      else if(gPhase===3){ let c=gV.ch; opts=[c,c+1,c-1,c+2].filter(x=>x>0&&x!==c).slice(0,3); opts=[c,...opts]; }
-      document.getElementById('g-phase').innerText=gPhase===1?'Testament?':gPhase===2?'Which book?':'Chapter?';
-      let html=''; opts.sort(()=>Math.random()-.5).forEach(o=>html+=`<div class="opt" data-opt="${o}">${o}</div>`);
-      document.getElementById('g-options').innerHTML=html;
-      document.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>handleGuess(b.dataset.opt,opts)));
-    }
-    function handleGuess(choice,all){
-      let correct=false, ans='';
-      if(gPhase===1){ let exp=gV.t==='NT'?'New Testament':'Old Testament'; correct=(choice===exp); ans=exp; }
-      else if(gPhase===2){ correct=(choice===gV.book); ans=gV.book; }
-      else { correct=(Number(choice)===gV.ch); ans=gV.ch; }
-      document.querySelectorAll('.opt').forEach(b=>{ b.style.pointerEvents='none'; if(b.dataset.opt==ans) b.classList.add('correct'); else if(b.dataset.opt==choice && !correct) b.classList.add('wrong'); });
-      if(correct){
-        gScoreRound++; 
-        if(gPhase===3){
-          let bonus=gScoreRound*2; ST.score+=bonus; ST.streak++; showToast('🎉 +'+bonus); gDone=true;
-          document.getElementById('g-next').disabled=false; document.getElementById('g-next').innerText='Next';
-        } else { showFeedback('✓ correct','good'); setTimeout(()=>{ gPhase++; hideFB(); renderGamePhase(); },700); }
-      } else {
-        ST.score+=gScoreRound; ST.streak=0; gDone=true;
-        document.getElementById('g-next').disabled=false; document.getElementById('g-next').innerText='Next';
-        showFeedback('✗ '+ans,'bad'); if(gScoreRound>0) showToast('+'+gScoreRound);
+    });
+  }
+  // Structure 3: { book: { chapters: {...} } } nested object
+  else if (typeof data === 'object') {
+    const chKeys = Object.keys(data).filter(k=>!isNaN(k)||k==='chapters');
+    chKeys.forEach(chK => {
+      const chData = data[chK];
+      if (typeof chData === 'object') {
+        Object.keys(chData).forEach(vK => {
+          const txt = (typeof chData[vK]==='string'?chData[vK]:chData[vK]?.text||'').trim();
+          if (txt.length>20) {
+            verses.push({ text:txt, ref:`${bookName} ${chK}:${vK}`, book:bookName, ch:+chK||0, v:+vK||0, t });
+          }
+        });
       }
-      save(); updateScore();
-    }
-    function showFeedback(m,t){ let f=document.getElementById('g-feedback'); f.textContent=m; f.className='feedback show '+t; }
-    function hideFB(){ document.getElementById('g-feedback').className='feedback'; }
-    function updateScore(){ document.getElementById('game-score').textContent=ST.score; document.getElementById('stat-points').textContent=ST.score; }
-    document.getElementById('g-next').addEventListener('click',gameNext);
+    });
+  }
+  return verses;
+}
 
-    // profile/auth
-    function updateProfile(){
-      if(ST.user){ document.getElementById('p-avatar').innerText=ST.user.name[0]; document.getElementById('p-name').innerText=ST.user.name; document.getElementById('p-sub').innerText=ST.user.email; }
-      else { document.getElementById('p-avatar').innerText='✦'; document.getElementById('p-name').innerText='Guest'; document.getElementById('p-sub').innerText='sign in'; }
-      document.getElementById('stat-points').textContent=ST.score; document.getElementById('stat-favs').textContent=ST.favs.length; document.getElementById('stat-streak').textContent=ST.streak;
-    }
-    document.getElementById('menu-login').addEventListener('click',()=>document.getElementById('auth-overlay').classList.add('show'));
-    document.getElementById('auth-close').addEventListener('click',()=>document.getElementById('auth-overlay').classList.remove('show'));
-    // minimal auth simulation
-    document.getElementById('auth-submit').addEventListener('click',()=>{ ST.user={email:'demo@f',name:'Demo'}; save(); updateProfile(); document.getElementById('auth-overlay').classList.remove('show'); showToast('signed in'); });
-    document.getElementById('menu-go-favs').addEventListener('click',()=>switchTab('favourites'));
-    document.getElementById('menu-go-game').addEventListener('click',()=>switchTab('game'));
+function buildReel() {
+  const wrap = document.getElementById('reel-wrap');
+  wrap.innerHTML = '';
+  const pool = REEL_VERSES.length ? REEL_VERSES : shuffle(EMBEDDED_VERSES);
 
-    // boot
-    initHome(); updateScore(); updateFavCount(); updateProfile(); window.reelBuilt=false;
-  })();
+  pool.forEach((v, i) => {
+    const slide = document.createElement('div'); slide.className='reel-slide';
+    const f = isFav(v.ref);
+    slide.innerHTML=`
+      <div class="reel-testament">${v.t==='NT'?'New Testament':'Old Testament'}</div>
+      <div class="reel-text">${v.text}</div>
+      <div class="reel-ref">${v.ref}</div>
+      <div class="reel-actions">
+        <button class="reel-btn fav-reel-btn${f?' saved':''}">
+          ${heartSvg(f)}<span>${f?'Saved':'Save'}</span>
+        </button>
+        <button class="reel-btn share-reel-btn">
+          ${shareSvg()}<span>Share</span>
+        </button>
+      </div>
+      ${i===0?`<div class="scroll-cue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>Scroll</div>`:''}`;
+
+    slide.querySelector('.fav-reel-btn').addEventListener('click',function(){
+      toggleFav(v.ref,v.text,v.book,v.ch,v.v,v.t);
+      const fn=isFav(v.ref);
+      this.className='reel-btn fav-reel-btn'+(fn?' saved':'');
+      this.innerHTML=heartSvg(fn)+`<span>${fn?'Saved':'Save'}</span>`;
+    });
+    slide.querySelector('.share-reel-btn').addEventListener('click',()=>doShare(v.text,v.ref));
+    wrap.appendChild(slide);
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  FAVOURITES PAGE
+// ═══════════════════════════════════════════════
+function renderFavs() {
+  const list=document.getElementById('fav-list'); list.innerHTML='';
+  if (!ST.favs.length) {
+    list.innerHTML=`<div class="empty-state">${heartSvg(false)}<h3>Nothing saved yet</h3><p>Browse the Verses tab and tap Save to collect your favourite passages here.</p></div>`;
+    return;
+  }
+  ST.favs.forEach(v=>{
+    const card=document.createElement('div'); card.className='vcard';
+    card.innerHTML=`
+      <div class="vcard-text">${v.text}</div>
+      <div class="vcard-ref">${v.ref}</div>
+      <div class="vcard-actions">
+        <button class="act-btn saved rem-btn">${heartSvg(true)} Remove</button>
+        <button class="act-btn share-btn">${shareSvg()} Share</button>
+      </div>`;
+    card.querySelector('.rem-btn').addEventListener('click',()=>{ toggleFav(v.ref,v.text,v.book,v.ch,v.v,v.t); renderFavs(); });
+    card.querySelector('.share-btn').addEventListener('click',()=>doShare(v.text,v.ref));
+    list.appendChild(card);
+  });
+}
+
+// ═══════════════════════════════════════════════
+//  GAME
+// ═══════════════════════════════════════════════
+let GS = { verse:null, phase:0, roundPts:0, totalRight:0, done:true };
+
+function gameNextBtn() {
+  if (GS.done) {
+    GS.verse=rand(EMBEDDED_VERSES);
+    GS.phase=1; GS.roundPts=0; GS.totalRight=0; GS.done=false;
+    document.getElementById('g-verse').textContent=GS.verse.text;
+    hideFeedback(); renderPhase();
+    const btn=document.getElementById('g-next-btn');
+    btn.disabled=true; btn.textContent='Skip →';
+  }
+}
+
+function renderPhase() {
+  const {verse,phase}=GS;
+  let label='', opts=[];
+  if (phase===1) { label='📖 Old or New Testament?'; opts=shuffle(['Old Testament','New Testament']); }
+  else if (phase===2) {
+    label='📚 Which Book?';
+    const pool=(verse.t==='NT'?NT_BOOKS:OT_BOOKS);
+    opts=shuffle([verse.book,...pool.filter(b=>b!==verse.book).sort(()=>Math.random()-.5).slice(0,3)]);
+  } else if (phase===3) {
+    label='📑 Which Chapter?';
+    const c=verse.ch, wrongs=new Set();
+    while(wrongs.size<3){let x=c+Math.floor(Math.random()*9)-4;if(x>0&&x!==c)wrongs.add(x);}
+    opts=shuffle([c,...[...wrongs]]);
+  }
+  document.getElementById('g-phase-label').textContent=label;
+  const el=document.getElementById('g-opts'); el.innerHTML='';
+  opts.forEach(opt=>{
+    const b=document.createElement('button'); b.className='opt-btn';
+    b.textContent=opt; b.addEventListener('click',()=>handleGuess(opt)); el.appendChild(b);
+  });
+}
+
+function handleGuess(choice) {
+  const {verse,phase}=GS;
+  const expected=phase===1?(verse.t==='NT'?'New Testament':'Old Testament'):phase===2?verse.book:verse.ch;
+  const correct=String(choice)===String(expected);
+  document.querySelectorAll('.opt-btn').forEach(b=>{
+    b.disabled=true;
+    if(String(b.textContent)===String(expected))b.classList.add('correct');
+    else if(String(b.textContent)===String(choice)&&!correct)b.classList.add('wrong');
+  });
+  if (correct) {
+    GS.roundPts++; GS.totalRight++;
+    if (phase===3) {
+      const bonus=GS.totalRight===3?GS.roundPts*2:GS.roundPts;
+      ST.score+=bonus; ST.streak++;
+      save(); updateScoreDisplay();
+      showPtsPopup('+'+bonus, GS.totalRight===3?'🎉 Perfect! Points Doubled!':'✓ Well done!');
+      showFeedback(GS.totalRight===3?'🎉 All correct — points doubled!':'✓ Correct! Great job.','good');
+      endRound();
+    } else {
+      showFeedback('✓ Correct! Next question…','good');
+      setTimeout(()=>{ GS.phase++; hideFeedback(); renderPhase(); },900);
+    }
+  } else {
+    if(GS.roundPts>0){ST.score+=GS.roundPts;ST.streak++;}else{ST.streak=0;}
+    save(); updateScoreDisplay();
+    const ans=phase===1?(verse.t==='NT'?'New Testament':'Old Testament'):phase===2?verse.book:'Chapter '+verse.ch;
+    showFeedback(`✗ Answer: ${ans} (${verse.ref})`,'bad');
+    if(GS.roundPts>0)showPtsPopup('+'+GS.roundPts,'Partial points');
+    endRound();
+  }
+}
+
+function endRound() {
+  GS.done=true;
+  const btn=document.getElementById('g-next-btn');
+  btn.disabled=false; btn.textContent='Next Verse →';
+}
+
+function showFeedback(msg,type){const el=document.getElementById('g-feedback');el.textContent=msg;el.className='feedback show '+type;}
+function hideFeedback(){document.getElementById('g-feedback').className='feedback';}
+
+function updateScoreDisplay() {
+  document.getElementById('g-score').textContent=ST.score;
+  document.getElementById('s-pts').textContent=ST.score;
+  document.getElementById('s-streak').textContent=ST.streak;
+  const sb=document.getElementById('streak-badge');
+  if(ST.streak>=2){sb.style.display='flex';document.getElementById('streak-n').textContent=ST.streak;}
+  else{sb.style.display='none';}
+}
+
+function showPtsPopup(amount,label) {
+  const pp=document.getElementById('pts-popup');
+  document.getElementById('pts-amount').textContent=amount;
+  document.getElementById('pts-lbl').textContent=label;
+  pp.classList.add('show');
+  setTimeout(()=>pp.classList.remove('show'),1800);
+}
+
+document.getElementById('g-next-btn').addEventListener('click',gameNextBtn);
+
+// ═══════════════════════════════════════════════
+//  PROFILE & AUTH
+// ═══════════════════════════════════════════════
+let authMode='login';
+
+function updateProfile() {
+  if (ST.user) {
+    document.getElementById('p-avatar').textContent=ST.user.name.charAt(0).toUpperCase();
+    document.getElementById('p-name').textContent=ST.user.name;
+    document.getElementById('p-sub').textContent=ST.user.email;
+    document.getElementById('menu-login').style.display='none';
+    document.getElementById('menu-logout').style.display='flex';
+  } else {
+    document.getElementById('p-avatar').textContent='✦';
+    document.getElementById('p-name').textContent='Guest';
+    document.getElementById('p-sub').textContent='Join FaithFlow to save your progress';
+    document.getElementById('menu-login').style.display='flex';
+    document.getElementById('menu-logout').style.display='none';
+  }
+  document.getElementById('s-pts').textContent=ST.score;
+  document.getElementById('s-favs').textContent=ST.favs.length;
+  document.getElementById('s-streak').textContent=ST.streak;
+  syncFavCount();
+}
+
+function openAuth(mode){ authMode=mode||'login'; refreshAuthUI(); document.getElementById('auth-overlay').classList.add('show'); }
+function closeAuth(){
+  document.getElementById('auth-overlay').classList.remove('show');
+  ['a-email','a-pass','a-name'].forEach(id=>document.getElementById(id).value='');
+}
+function refreshAuthUI(){
+  const isReg=authMode==='register';
+  document.getElementById('auth-title').textContent=isReg?'Join FaithFlow':'Welcome Back';
+  document.getElementById('auth-submit-btn').textContent=isReg?'Create Account':'Sign In';
+  document.getElementById('a-name-wrap').style.display=isReg?'block':'none';
+  document.getElementById('auth-toggle-line').innerHTML=isReg
+    ?'Already have an account? <a id="auth-mode-toggle">Sign In</a>'
+    :'Don\'t have an account? <a id="auth-mode-toggle">Register</a>';
+  document.getElementById('auth-mode-toggle').addEventListener('click',()=>{
+    authMode=authMode==='login'?'register':'login'; refreshAuthUI();
+  });
+}
+
+document.getElementById('auth-submit-btn').addEventListener('click',()=>{
+  const email=document.getElementById('a-email').value.trim();
+  const pass=document.getElementById('a-pass').value;
+  const name=document.getElementById('a-name').value.trim();
+  if(!email||!pass){toast('Please fill in all fields');return;}
+  if(authMode==='register'){
+    if(!name){toast('Please enter your name');return;}
+    if(ST.users[email]){toast('Account already exists — try signing in');return;}
+    ST.users[email]={email,pass,name};
+    ST.user={email,name}; save(); closeAuth(); updateProfile(); toast('Welcome to FaithFlow! 🎉');
+  } else {
+    const u=ST.users[email];
+    if(!u||u.pass!==pass){toast('Incorrect email or password');return;}
+    ST.user={email,name:u.name}; save(); closeAuth(); updateProfile(); toast('Welcome back, '+u.name+'!');
+  }
+});
+
+document.getElementById('auth-close-btn').addEventListener('click',closeAuth);
+document.getElementById('auth-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('auth-overlay'))closeAuth();});
+document.getElementById('menu-login').addEventListener('click',()=>openAuth('login'));
+document.getElementById('menu-logout').addEventListener('click',()=>{ST.user=null;save();updateProfile();toast('Signed out. See you soon! ✦');});
+document.getElementById('menu-go-favs').addEventListener('click',()=>switchTab('favourites'));
+document.getElementById('menu-go-game').addEventListener('click',()=>switchTab('game'));
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+initHome();
+updateScoreDisplay();
+syncFavCount();
+refreshAuthUI();
 </script>
 </body>
 </html>
