@@ -2,864 +2,1178 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>FaithFlow – Word of God, Every Day</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>FaithFlow</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-  :root {
-    --bg: #0d0a07;
-    --surface: #161109;
-    --card: #1e1610;
-    --card2: #251d12;
-    --gold: #c9a84c;
-    --gold-light: #e8cc80;
-    --gold-dim: #7a6430;
-    --cream: #f5ead8;
-    --cream-dim: #b8a98a;
-    --text: #ede0c8;
-    --text-muted: #8a7a60;
-    --accent: #9b6b3a;
-    --red: #c0392b;
-    --green: #27ae60;
-    --blue: #2980b9;
-    --border: rgba(201,168,76,0.15);
-    --border-bright: rgba(201,168,76,0.4);
-    --tab-h: 72px;
-    --top-h: 60px;
-  }
+:root {
+  --bg:        #0c0b09;
+  --surface:   #131109;
+  --card:      #1a1710;
+  --card2:     #201d13;
+  --gold:      #c8a84b;
+  --gold-lt:   #e2c97e;
+  --gold-dk:   #6e5b28;
+  --cream:     #f0e2c6;
+  --cream-dim: #a89878;
+  --text:      #e8d9c0;
+  --muted:     #7a6d54;
+  --border:    rgba(200,168,75,0.13);
+  --border-hi: rgba(200,168,75,0.38);
+  --red:       #bf3b2f;
+  --green:     #2d8a5e;
+  --TAB:       68px;
+  --TOP:       58px;
+  --MAX:       520px;
+}
 
-  html, body {
-    height: 100%;
-    overflow: hidden;
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    -webkit-tap-highlight-color: transparent;
-  }
+html { height: 100%; background: #080705; }
+body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  -webkit-tap-highlight-color: transparent;
+  overflow: hidden;
+}
 
-  #app {
-    height: 100dvh;
-    display: flex;
-    flex-direction: column;
-    max-width: 480px;
-    margin: 0 auto;
-    position: relative;
-    overflow: hidden;
-  }
+/* ── DESKTOP SHELL ── */
+#shell {
+  position: fixed; inset: 0;
+  display: flex; align-items: stretch; justify-content: center;
+  background: #080705;
+}
 
-  /* ======= TOP BAR ======= */
-  #topbar {
-    height: var(--top-h);
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 20px;
-    flex-shrink: 0;
-    z-index: 10;
-  }
-  .app-logo {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 26px;
-    font-weight: 600;
-    color: var(--gold);
-    letter-spacing: 0.02em;
-  }
-  .app-logo span { color: var(--cream); font-weight: 300; }
-  #topbar-right { display: flex; gap: 12px; align-items: center; }
-  .icon-btn {
-    background: none; border: none; cursor: pointer;
-    color: var(--text-muted); font-size: 20px;
-    width: 36px; height: 36px;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 50%;
-    transition: color 0.2s, background 0.2s;
-  }
-  .icon-btn:hover { color: var(--gold); background: rgba(201,168,76,0.1); }
+/* left sidebar on desktop */
+#sidebar {
+  display: none;
+  flex-direction: column;
+  width: 220px;
+  border-right: 1px solid var(--border);
+  background: var(--surface);
+  padding: 28px 16px;
+  flex-shrink: 0;
+  gap: 4px;
+}
+.sidebar-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; color: var(--gold);
+  padding: 0 8px 24px;
+  letter-spacing: .02em;
+}
+.sidebar-logo em { color: var(--cream); font-style: normal; font-weight: 400; }
+.side-tab {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 12px; border-radius: 10px;
+  border: none; background: none; cursor: pointer;
+  color: var(--muted); font-family: 'Nunito', sans-serif;
+  font-size: 14px; font-weight: 500;
+  transition: color .2s, background .2s;
+  text-align: left; width: 100%;
+}
+.side-tab svg { width: 18px; height: 18px; flex-shrink: 0; }
+.side-tab:hover { color: var(--text); background: rgba(255,255,255,.04); }
+.side-tab.active { color: var(--gold); background: rgba(200,168,75,.1); }
 
-  /* ======= PAGES ======= */
-  #pages {
-    flex: 1;
-    overflow: hidden;
-    position: relative;
-  }
-  .page {
-    position: absolute;
-    inset: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    display: none;
-    flex-direction: column;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-  }
-  .page::-webkit-scrollbar { display: none; }
-  .page.active { display: flex; }
+/* center pane */
+#pane {
+  width: 100%; max-width: var(--MAX);
+  display: flex; flex-direction: column;
+  height: 100%; border-right: 1px solid var(--border);
+  border-left: 1px solid var(--border);
+  overflow: hidden; position: relative;
+  background: var(--bg);
+}
 
-  /* ======= TAB BAR ======= */
-  #tabbar {
-    height: var(--tab-h);
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    display: flex;
-    flex-shrink: 0;
-    z-index: 10;
-  }
-  .tab {
-    flex: 1;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 4px;
-    background: none; border: none; cursor: pointer;
-    color: var(--text-muted);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    transition: color 0.2s;
-    padding-bottom: env(safe-area-inset-bottom, 0);
-    position: relative;
-  }
-  .tab svg { width: 22px; height: 22px; transition: transform 0.2s; }
-  .tab.active { color: var(--gold); }
-  .tab.active svg { transform: translateY(-2px); }
-  .tab.active::after {
-    content: '';
-    position: absolute;
-    top: 0; left: 20%; right: 20%;
-    height: 2px;
-    background: var(--gold);
-    border-radius: 0 0 2px 2px;
-  }
+/* right info panel on desktop */
+#panel {
+  display: none;
+  flex-direction: column;
+  width: 280px; flex-shrink: 0;
+  padding: 28px 20px; gap: 16px;
+  overflow-y: auto;
+}
 
-  /* ======= SHARED COMPONENTS ======= */
-  .section-label {
-    font-size: 11px; letter-spacing: 0.15em;
-    text-transform: uppercase; color: var(--gold-dim);
-    font-weight: 600; padding: 20px 20px 8px;
-  }
+@media (min-width: 720px) {
+  #sidebar { display: flex; }
+  #tabbar  { display: none !important; }
+  #topbar .app-logo { display: none; }
+}
+@media (min-width: 1060px) {
+  #panel { display: flex; }
+}
 
-  .verse-card {
-    margin: 0 16px 12px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 20px;
-    position: relative;
-    overflow: hidden;
-    transition: border-color 0.2s;
-  }
-  .verse-card::before {
-    content: '\201C';
-    position: absolute; top: -10px; left: 14px;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 80px; color: var(--border-bright);
-    line-height: 1; pointer-events: none;
-  }
-  .verse-card:hover { border-color: var(--border-bright); }
-  .verse-card .verse-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 19px; line-height: 1.55;
-    color: var(--cream); margin-bottom: 12px;
-    position: relative; z-index: 1;
-  }
-  .verse-card .verse-ref {
-    font-size: 12px; color: var(--gold);
-    font-weight: 500; letter-spacing: 0.08em;
-  }
-  .verse-card .verse-actions {
-    display: flex; gap: 8px; margin-top: 14px;
-    padding-top: 14px; border-top: 1px solid var(--border);
-  }
-  .action-btn {
-    background: none; border: none; cursor: pointer;
-    color: var(--text-muted); font-size: 13px;
-    display: flex; align-items: center; gap: 6px;
-    font-family: 'DM Sans', sans-serif;
-    padding: 6px 10px; border-radius: 8px;
-    transition: color 0.2s, background 0.2s;
-  }
-  .action-btn:hover, .action-btn.active { color: var(--gold); background: rgba(201,168,76,0.08); }
-  .action-btn.fav-active { color: #e84393; }
-  .action-btn svg { width: 16px; height: 16px; }
+/* ── TOP BAR ── */
+#topbar {
+  height: var(--TOP);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 0 18px; flex-shrink: 0; z-index: 10;
+}
+.app-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; color: var(--gold); letter-spacing: .02em;
+}
+.app-logo em { color: var(--cream); font-style: normal; font-weight: 400; }
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; color: var(--cream);
+}
 
-  /* ======= HOME PAGE ======= */
-  #page-home { padding-bottom: 20px; }
+/* ── PAGES ── */
+#pages { flex: 1; overflow: hidden; position: relative; }
+.page {
+  position: absolute; inset: 0;
+  overflow-y: auto; overflow-x: hidden;
+  display: none; flex-direction: column;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+  padding-bottom: 24px;
+}
+.page::-webkit-scrollbar { width: 4px; }
+.page::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+.page.active { display: flex; }
 
-  .daily-verse-banner {
-    margin: 16px;
-    background: linear-gradient(135deg, #1a1205 0%, #2d1f0a 50%, #1a1205 100%);
-    border: 1px solid var(--border-bright);
-    border-radius: 20px;
-    padding: 28px 24px;
-    position: relative;
-    overflow: hidden;
-  }
-  .daily-verse-banner::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at top right, rgba(201,168,76,0.12) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .daily-tag {
-    font-size: 10px; letter-spacing: 0.2em;
-    text-transform: uppercase; color: var(--gold);
-    font-weight: 600; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .daily-tag::before {
-    content: '✦'; font-size: 8px;
-  }
-  .daily-verse-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px; line-height: 1.55;
-    color: var(--cream); margin-bottom: 16px;
-    font-style: italic;
-  }
-  .daily-verse-ref {
-    font-size: 13px; color: var(--gold);
-    font-weight: 500; letter-spacing: 0.06em;
-  }
-  .daily-verse-actions {
-    display: flex; gap: 10px; margin-top: 20px;
-  }
-  .pill-btn {
-    border: 1px solid var(--border-bright);
-    background: rgba(201,168,76,0.08);
-    color: var(--gold);
-    border-radius: 100px; padding: 8px 16px;
-    font-size: 12px; font-family: 'DM Sans', sans-serif;
-    cursor: pointer; font-weight: 500;
-    transition: background 0.2s, border-color 0.2s;
-    display: flex; align-items: center; gap: 6px;
-  }
-  .pill-btn:hover { background: rgba(201,168,76,0.2); }
-  .pill-btn svg { width: 14px; height: 14px; }
+/* ── TAB BAR (mobile) ── */
+#tabbar {
+  height: var(--TAB);
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex; flex-shrink: 0; z-index: 10;
+}
+.tab {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 3px;
+  background: none; border: none; cursor: pointer;
+  color: var(--muted);
+  font-family: 'Nunito', sans-serif; font-size: 9px;
+  font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  transition: color .2s;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+}
+.tab svg { width: 20px; height: 20px; transition: transform .2s; }
+.tab.active { color: var(--gold); }
+.tab.active svg { transform: translateY(-1px); }
 
-  .trending-grid {
-    padding: 0 16px 8px;
-    display: flex; flex-direction: column; gap: 12px;
-  }
+/* ── SECTION LABEL ── */
+.sec-label {
+  font-size: 10px; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--gold-dk); font-weight: 700;
+  padding: 20px 18px 8px;
+}
 
-  /* ======= VERSES (REELS) PAGE ======= */
-  #page-verses {
-    overflow: hidden;
-    display: none;
-    flex-direction: column;
-  }
-  #page-verses.active { display: flex; }
+/* ── VERSE CARD ── */
+.vcard {
+  margin: 0 14px 10px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px 18px 14px;
+  transition: border-color .2s;
+}
+.vcard:hover { border-color: var(--border-hi); }
+.vcard-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px; line-height: 1.65; color: var(--cream);
+  margin-bottom: 10px; font-style: italic;
+}
+.vcard-ref {
+  font-size: 11px; color: var(--gold);
+  font-weight: 600; letter-spacing: .07em;
+}
+.vcard-actions {
+  display: flex; gap: 6px; margin-top: 12px;
+  padding-top: 12px; border-top: 1px solid var(--border);
+}
+.act-btn {
+  display: flex; align-items: center; gap: 5px;
+  background: none; border: none; cursor: pointer;
+  color: var(--muted); font-size: 12px; font-weight: 600;
+  font-family: 'Nunito', sans-serif;
+  padding: 5px 10px; border-radius: 8px;
+  transition: color .2s, background .2s;
+}
+.act-btn:hover { color: var(--gold); background: rgba(200,168,75,.07); }
+.act-btn.saved { color: #e04090; }
+.act-btn svg { width: 14px; height: 14px; }
 
-  #verse-reel-container {
-    flex: 1;
-    overflow-y: scroll;
-    scroll-snap-type: y mandatory;
-    scrollbar-width: none;
-  }
-  #verse-reel-container::-webkit-scrollbar { display: none; }
+/* ── HOME ── */
+#page-home { padding-bottom: 32px; }
 
-  .reel-slide {
-    height: 100%;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 30px 28px;
-    position: relative;
-    overflow: hidden;
-  }
-  .reel-slide::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 30% 40%, rgba(201,168,76,0.06) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .reel-book-label {
-    font-size: 11px; letter-spacing: 0.2em;
-    text-transform: uppercase; color: var(--gold-dim);
-    margin-bottom: 28px; font-weight: 600;
-    align-self: flex-start;
-  }
-  .reel-verse-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(22px, 6vw, 30px);
-    line-height: 1.55;
-    color: var(--cream);
-    text-align: center;
-    margin-bottom: 24px;
-    position: relative;
-  }
-  .reel-verse-text::before {
-    content: '\201C';
-    font-size: 0.8em; color: var(--gold-dim);
-    position: relative; top: -0.1em;
-  }
-  .reel-verse-text::after {
-    content: '\201D';
-    font-size: 0.8em; color: var(--gold-dim);
-    position: relative; top: -0.1em;
-  }
-  .reel-ref {
-    font-size: 14px; color: var(--gold);
-    font-weight: 500; letter-spacing: 0.08em;
-    margin-bottom: 36px;
-  }
-  .reel-side-actions {
-    position: absolute;
-    right: 16px; bottom: 80px;
-    display: flex; flex-direction: column; gap: 20px;
-    align-items: center;
-  }
-  .reel-action {
-    display: flex; flex-direction: column;
-    align-items: center; gap: 4px;
-    cursor: pointer; background: none; border: none;
-    color: var(--text-muted);
-    transition: color 0.2s, transform 0.15s;
-  }
-  .reel-action svg { width: 28px; height: 28px; }
-  .reel-action span { font-size: 11px; }
-  .reel-action:active { transform: scale(0.9); }
-  .reel-action.fav-active { color: #e84393; }
+.daily-card {
+  margin: 14px; position: relative; overflow: hidden;
+  background: linear-gradient(145deg, #17140c 0%, #231c0d 60%, #17140c 100%);
+  border: 1px solid var(--border-hi);
+  border-radius: 18px; padding: 26px 22px;
+}
+.daily-card::before {
+  content: '';
+  position: absolute; top: 0; right: 0;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(200,168,75,.12) 0%, transparent 70%);
+  pointer-events: none;
+}
+.daily-tag {
+  font-size: 9px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--gold); font-weight: 700;
+  display: flex; align-items: center; gap: 7px; margin-bottom: 14px;
+}
+.daily-tag::before { content: '✦'; font-size: 7px; }
+.daily-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px; line-height: 1.65; color: var(--cream);
+  font-style: italic; margin-bottom: 12px; position: relative; z-index: 1;
+}
+.daily-ref {
+  font-size: 12px; color: var(--gold); font-weight: 600; letter-spacing: .06em;
+}
+.daily-actions { display: flex; gap: 8px; margin-top: 18px; flex-wrap: wrap; }
+.pill {
+  display: flex; align-items: center; gap: 6px;
+  border: 1px solid var(--border-hi);
+  background: rgba(200,168,75,.06);
+  color: var(--gold); border-radius: 100px;
+  padding: 7px 14px; font-size: 12px; font-weight: 600;
+  font-family: 'Nunito', sans-serif; cursor: pointer;
+  transition: background .2s;
+}
+.pill:hover { background: rgba(200,168,75,.15); }
+.pill svg { width: 13px; height: 13px; }
+.pill.pill-saved { color: #e04090; border-color: rgba(224,64,144,.35); background: rgba(224,64,144,.06); }
 
-  .scroll-hint {
-    position: absolute; bottom: 20px; left: 50%;
-    transform: translateX(-50%);
-    display: flex; flex-direction: column;
-    align-items: center; gap: 6px;
-    color: var(--text-muted); font-size: 11px;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    animation: bounce 2s infinite;
-    opacity: 0.7;
-  }
-  @keyframes bounce {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
-    50% { transform: translateX(-50%) translateY(6px); }
-  }
-  .scroll-hint svg { width: 18px; height: 18px; }
+/* ── REEL ── */
+#page-verses { padding-bottom: 0; overflow: hidden; }
+#page-verses.active { display: flex; }
+#reel-wrap {
+  flex: 1; overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+}
+#reel-wrap::-webkit-scrollbar { display: none; }
 
-  /* ======= FAVOURITES PAGE ======= */
-  #page-favourites { padding-bottom: 20px; }
-  .empty-state {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 16px; padding: 60px 40px; text-align: center;
-    color: var(--text-muted);
-  }
-  .empty-state svg { width: 56px; height: 56px; opacity: 0.4; }
-  .empty-state h3 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 22px; color: var(--cream-dim);
-  }
-  .empty-state p { font-size: 14px; line-height: 1.6; }
+.reel-slide {
+  min-height: 100%; scroll-snap-align: start; scroll-snap-stop: always;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 32px 28px 90px; position: relative; overflow: hidden;
+}
+.reel-slide::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 25% 35%, rgba(200,168,75,.055) 0%, transparent 55%);
+  pointer-events: none;
+}
+.reel-testament {
+  font-size: 9px; letter-spacing: .2em; text-transform: uppercase;
+  color: var(--gold-dk); font-weight: 700; margin-bottom: 22px; align-self: flex-start;
+}
+.reel-text {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(18px, 4.5vw, 26px);
+  line-height: 1.65; color: var(--cream);
+  text-align: center; font-style: italic;
+  margin-bottom: 18px;
+}
+.reel-ref { font-size: 13px; color: var(--gold); font-weight: 600; letter-spacing: .07em; margin-bottom: 28px; }
+.reel-actions {
+  display: flex; gap: 20px; justify-content: center;
+}
+.reel-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  background: none; border: none; cursor: pointer; color: var(--muted);
+  font-family: 'Nunito', sans-serif; font-size: 11px; font-weight: 600;
+  transition: color .2s, transform .15s;
+}
+.reel-btn svg { width: 26px; height: 26px; }
+.reel-btn:active { transform: scale(.9); }
+.reel-btn.saved { color: #e04090; }
 
-  /* ======= GAME PAGE ======= */
-  #page-game { padding: 20px; padding-bottom: 30px; }
-  .game-header {
-    display: flex; justify-content: space-between;
-    align-items: center; margin-bottom: 20px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 16px 20px;
-  }
-  .game-score-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
-  .game-score-val {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 36px; color: var(--gold); font-weight: 600;
-    line-height: 1;
-  }
-  .streak-badge {
-    background: linear-gradient(135deg, #c9562c, #e8832a);
-    border-radius: 100px; padding: 6px 14px;
-    font-size: 12px; font-weight: 600; color: #fff;
-    display: flex; align-items: center; gap: 6px;
-  }
+.scroll-cue {
+  position: absolute; bottom: 22px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 5px;
+  color: var(--muted); font-size: 10px; letter-spacing: .1em; text-transform: uppercase;
+  animation: bob 2.2s ease-in-out infinite; opacity: .6;
+}
+.scroll-cue svg { width: 16px; height: 16px; }
+@keyframes bob { 0%,100% { transform: translateX(-50%) translateY(0); } 55% { transform: translateX(-50%) translateY(5px); } }
 
-  .game-verse-box {
-    background: var(--card);
-    border: 1px solid var(--border-bright);
-    border-radius: 20px;
-    padding: 28px 24px;
-    margin-bottom: 20px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .game-verse-box::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%);
-    pointer-events: none;
-  }
-  .game-verse-display {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 20px; line-height: 1.6;
-    color: var(--cream); font-style: italic;
-  }
+/* ── FAVOURITES ── */
+.empty-state {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 12px; padding: 60px 40px; text-align: center; color: var(--muted);
+}
+.empty-state svg { width: 48px; height: 48px; opacity: .35; }
+.empty-state h3 { font-family: 'Playfair Display', serif; font-size: 20px; color: var(--cream-dim); }
+.empty-state p { font-size: 13px; line-height: 1.65; max-width: 260px; }
 
-  .game-phase-label {
-    font-size: 11px; letter-spacing: 0.15em;
-    text-transform: uppercase; color: var(--gold-dim);
-    font-weight: 600; margin-bottom: 14px;
-    text-align: center;
-  }
+/* ── GAME ── */
+#page-game { padding: 18px; padding-bottom: 32px; gap: 14px; }
 
-  .guess-options {
-    display: flex; flex-direction: column; gap: 10px;
-    margin-bottom: 16px;
-  }
-  .guess-btn {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px 18px;
-    color: var(--text); font-family: 'DM Sans', sans-serif;
-    font-size: 14px; cursor: pointer;
-    transition: border-color 0.2s, background 0.2s, transform 0.1s;
-    text-align: left; display: flex;
-    align-items: center; justify-content: space-between;
-  }
-  .guess-btn:hover { border-color: var(--border-bright); background: var(--card2); }
-  .guess-btn:active { transform: scale(0.98); }
-  .guess-btn.correct { border-color: var(--green); background: rgba(39,174,96,0.12); color: var(--green); }
-  .guess-btn.wrong { border-color: var(--red); background: rgba(192,57,43,0.12); color: var(--red); }
-  .guess-btn.reveal-correct { border-color: var(--green); background: rgba(39,174,96,0.08); }
+.game-hdr {
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 16px 18px;
+}
+.g-score-lbl { font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.g-score {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px; color: var(--gold); font-weight: 700; line-height: 1;
+}
+.streak-badge {
+  background: linear-gradient(135deg,#b84a1e,#d97826);
+  border-radius: 100px; padding: 6px 13px;
+  font-size: 12px; font-weight: 700; color: #fff;
+  display: flex; align-items: center; gap: 5px;
+}
 
-  .game-feedback {
-    text-align: center; padding: 14px;
-    border-radius: 12px; font-size: 14px;
-    font-weight: 500; margin-bottom: 14px;
-    display: none;
-  }
-  .game-feedback.show { display: block; }
-  .game-feedback.good { background: rgba(39,174,96,0.12); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
-  .game-feedback.bad { background: rgba(192,57,43,0.12); color: #e57373; border: 1px solid rgba(192,57,43,0.3); }
+.game-verse-box {
+  background: var(--card); border: 1px solid var(--border-hi);
+  border-radius: 16px; padding: 24px 20px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.game-verse-box::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(200,168,75,.07) 0%, transparent 60%);
+  pointer-events: none;
+}
+.game-verse-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 17px; line-height: 1.7; color: var(--cream); font-style: italic;
+}
 
-  .next-btn {
-    width: 100%;
-    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
-    border: none; border-radius: 14px;
-    padding: 16px; color: var(--bg);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px; font-weight: 600;
-    cursor: pointer; letter-spacing: 0.03em;
-    transition: opacity 0.2s, transform 0.15s;
-  }
-  .next-btn:active { transform: scale(0.98); }
-  .next-btn:disabled { opacity: 0.4; cursor: default; }
+.phase-lbl {
+  font-size: 10px; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--gold-dk); font-weight: 700; text-align: center; margin-top: 4px;
+}
 
-  .points-popup {
-    position: fixed;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    background: var(--card2);
-    border: 2px solid var(--gold);
-    border-radius: 20px;
-    padding: 30px 40px;
-    text-align: center;
-    z-index: 100;
-    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    pointer-events: none;
-  }
-  .points-popup.show { transform: translate(-50%, -50%) scale(1); }
-  .points-popup .pts {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 52px; color: var(--gold); font-weight: 600;
-    line-height: 1;
-  }
-  .points-popup .pts-label { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+.opts { display: flex; flex-direction: column; gap: 9px; }
+.opt-btn {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 11px; padding: 13px 16px;
+  color: var(--text); font-family: 'Nunito', sans-serif;
+  font-size: 14px; font-weight: 500; cursor: pointer;
+  transition: border-color .2s, background .2s, transform .1s;
+  text-align: left;
+}
+.opt-btn:hover:not(:disabled) { border-color: var(--border-hi); background: var(--card2); }
+.opt-btn:active:not(:disabled) { transform: scale(.98); }
+.opt-btn.correct { border-color: var(--green); background: rgba(45,138,94,.12); color: #4ade80; }
+.opt-btn.wrong   { border-color: var(--red);   background: rgba(191,59,47,.11); color: #f87171; }
 
-  /* ======= PROFILE PAGE ======= */
-  #page-profile { padding: 20px; padding-bottom: 30px; }
-  .profile-hero {
-    background: linear-gradient(135deg, #1a1205, #2a1c09);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 30px 24px;
-    text-align: center;
-    margin-bottom: 20px;
-    position: relative; overflow: hidden;
-  }
-  .profile-hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.1) 0%, transparent 60%);
-  }
-  .avatar {
-    width: 72px; height: 72px;
-    border-radius: 50%;
-    border: 2px solid var(--gold-dim);
-    background: var(--card2);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 30px; color: var(--gold);
-    margin: 0 auto 14px;
-    position: relative; z-index: 1;
-  }
-  .profile-name {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 24px; color: var(--cream);
-    position: relative; z-index: 1;
-  }
-  .profile-sub {
-    font-size: 12px; color: var(--text-muted);
-    margin-top: 4px; position: relative; z-index: 1;
-  }
+.feedback {
+  border-radius: 11px; padding: 13px 16px;
+  font-size: 13px; font-weight: 600; text-align: center;
+  display: none;
+}
+.feedback.show { display: block; }
+.feedback.good { background: rgba(45,138,94,.12); color: #4ade80; border: 1px solid rgba(45,138,94,.3); }
+.feedback.bad  { background: rgba(191,59,47,.11); color: #f87171; border: 1px solid rgba(191,59,47,.3); }
 
-  .stats-row {
-    display: flex; gap: 12px; margin-bottom: 20px;
-  }
-  .stat-card {
-    flex: 1; background: var(--card);
-    border: 1px solid var(--border); border-radius: 14px;
-    padding: 16px 12px; text-align: center;
-  }
-  .stat-val {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 30px; color: var(--gold); font-weight: 600;
-    line-height: 1;
-  }
-  .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; letter-spacing: 0.08em; }
+.primary-btn {
+  width: 100%;
+  background: linear-gradient(135deg, var(--gold-dk), var(--gold));
+  border: none; border-radius: 12px; padding: 15px;
+  color: #0c0b09; font-family: 'Nunito', sans-serif;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  transition: opacity .2s, transform .15s;
+  letter-spacing: .02em;
+}
+.primary-btn:active { transform: scale(.98); }
+.primary-btn:disabled { opacity: .35; cursor: default; }
 
-  .profile-section {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px; overflow: hidden;
-    margin-bottom: 14px;
-  }
-  .profile-item {
-    display: flex; align-items: center;
-    padding: 16px 18px; gap: 14px;
-    border-bottom: 1px solid var(--border);
-    cursor: pointer; transition: background 0.2s;
-  }
-  .profile-item:last-child { border-bottom: none; }
-  .profile-item:hover { background: var(--card2); }
-  .profile-item-icon {
-    width: 36px; height: 36px;
-    background: rgba(201,168,76,0.1);
-    border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--gold); flex-shrink: 0;
-  }
-  .profile-item-icon svg { width: 18px; height: 18px; }
-  .profile-item-label { flex: 1; font-size: 14px; font-weight: 500; }
-  .profile-item-value { font-size: 13px; color: var(--text-muted); }
-  .chevron { color: var(--text-muted); }
-  .chevron svg { width: 14px; height: 14px; }
+/* ── PROFILE ── */
+#page-profile { padding: 18px; gap: 14px; padding-bottom: 32px; }
 
-  /* Auth form */
-  .auth-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(8px);
-    display: none; align-items: flex-end;
-    z-index: 200;
-  }
-  .auth-overlay.show { display: flex; }
-  .auth-sheet {
-    width: 100%; max-width: 480px;
-    margin: 0 auto;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 24px 24px 0 0;
-    padding: 30px 24px;
-    padding-bottom: calc(30px + env(safe-area-inset-bottom, 0));
-  }
-  .auth-sheet h2 {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 28px; color: var(--cream);
-    margin-bottom: 24px;
-  }
-  .form-group { margin-bottom: 16px; }
-  .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.08em; }
-  .form-group input {
-    width: 100%; background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px; padding: 14px 16px;
-    color: var(--text); font-size: 15px;
-    font-family: 'DM Sans', sans-serif;
-    outline: none; transition: border-color 0.2s;
-  }
-  .form-group input:focus { border-color: var(--gold-dim); }
-  .auth-btn {
-    width: 100%;
-    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
-    border: none; border-radius: 14px;
-    padding: 16px; color: var(--bg);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 15px; font-weight: 600;
-    cursor: pointer; margin-top: 8px;
-    transition: opacity 0.2s;
-  }
-  .auth-btn:hover { opacity: 0.9; }
-  .auth-toggle {
-    text-align: center; margin-top: 16px;
-    font-size: 13px; color: var(--text-muted);
-  }
-  .auth-toggle a { color: var(--gold); cursor: pointer; text-decoration: none; }
-  .auth-close {
-    position: absolute; top: 16px; right: 16px;
-    background: var(--card); border: none;
-    width: 32px; height: 32px; border-radius: 50%;
-    color: var(--text-muted); cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-  }
+.profile-hero {
+  background: linear-gradient(145deg, #17140c, #231c0d, #17140c);
+  border: 1px solid var(--border); border-radius: 18px;
+  padding: 28px 22px; text-align: center; position: relative; overflow: hidden;
+}
+.profile-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(200,168,75,.09) 0%, transparent 60%);
+}
+.avatar {
+  width: 68px; height: 68px; border-radius: 50%;
+  border: 2px solid var(--gold-dk);
+  background: var(--card2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Playfair Display', serif; font-size: 28px; color: var(--gold);
+  margin: 0 auto 12px; position: relative; z-index: 1;
+}
+.profile-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; color: var(--cream); position: relative; z-index: 1;
+}
+.profile-sub { font-size: 12px; color: var(--muted); margin-top: 3px; z-index: 1; position: relative; }
 
-  /* Notification toast */
-  .toast {
-    position: fixed;
-    bottom: calc(var(--tab-h) + 16px);
-    left: 50%; transform: translateX(-50%) translateY(20px);
-    background: var(--card2); border: 1px solid var(--border-bright);
-    border-radius: 100px; padding: 10px 20px;
-    font-size: 13px; color: var(--gold);
-    white-space: nowrap; z-index: 300;
-    opacity: 0; transition: opacity 0.3s, transform 0.3s;
-    pointer-events: none;
-  }
-  .toast.show {
-    opacity: 1; transform: translateX(-50%) translateY(0);
-  }
+.stats-row { display: flex; gap: 10px; }
+.stat-card {
+  flex: 1; background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 10px; text-align: center;
+}
+.stat-val {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px; color: var(--gold); font-weight: 700; line-height: 1;
+}
+.stat-lbl { font-size: 10px; color: var(--muted); margin-top: 4px; letter-spacing: .07em; }
 
-  /* Animated crosshatch bg for reels */
-  .reel-bg {
-    position: absolute; inset: 0; pointer-events: none;
-    opacity: 0.03;
-    background-image: repeating-linear-gradient(
-      45deg, var(--gold) 0px, var(--gold) 1px,
-      transparent 1px, transparent 20px
-    );
-  }
+.menu-section {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden;
+}
+.menu-item {
+  display: flex; align-items: center; padding: 15px 16px; gap: 12px;
+  border-bottom: 1px solid var(--border); cursor: pointer;
+  transition: background .2s;
+}
+.menu-item:last-child { border-bottom: none; }
+.menu-item:hover { background: var(--card2); }
+.menu-icon {
+  width: 34px; height: 34px; border-radius: 9px;
+  background: rgba(200,168,75,.08);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gold); flex-shrink: 0;
+}
+.menu-icon svg { width: 16px; height: 16px; }
+.menu-label { flex: 1; font-size: 14px; font-weight: 500; }
+.menu-value { font-size: 12px; color: var(--muted); }
+.chevron { color: var(--muted); }
+.chevron svg { width: 13px; height: 13px; }
+
+/* ── AUTH SHEET ── */
+.overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.75); backdrop-filter: blur(8px);
+  display: none; align-items: flex-end; justify-content: center; z-index: 200;
+}
+.overlay.show { display: flex; }
+.sheet {
+  width: 100%; max-width: var(--MAX);
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 22px 22px 0 0; padding: 28px 22px;
+  padding-bottom: calc(28px + env(safe-area-inset-bottom,0));
+  position: relative;
+}
+.sheet h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 26px; color: var(--cream); margin-bottom: 22px;
+}
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 11px; color: var(--muted); margin-bottom: 5px; letter-spacing: .08em; }
+.field input {
+  width: 100%; background: var(--card); border: 1px solid var(--border);
+  border-radius: 10px; padding: 13px 14px; color: var(--text);
+  font-size: 14px; font-family: 'Nunito', sans-serif; outline: none;
+  transition: border-color .2s;
+}
+.field input:focus { border-color: var(--gold-dk); }
+.sheet-btn {
+  width: 100%; background: linear-gradient(135deg, var(--gold-dk), var(--gold));
+  border: none; border-radius: 11px; padding: 15px;
+  color: #0c0b09; font-family: 'Nunito', sans-serif;
+  font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 6px;
+}
+.auth-toggle { text-align: center; margin-top: 14px; font-size: 13px; color: var(--muted); }
+.auth-toggle a { color: var(--gold); cursor: pointer; }
+.x-btn {
+  position: absolute; top: 14px; right: 16px;
+  background: var(--card); border: none; width: 30px; height: 30px;
+  border-radius: 50%; color: var(--muted); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 17px;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: calc(var(--TAB) + 14px); left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  background: var(--card2); border: 1px solid var(--border-hi);
+  border-radius: 100px; padding: 9px 18px;
+  font-size: 13px; font-weight: 600; color: var(--gold);
+  white-space: nowrap; z-index: 500;
+  opacity: 0; transition: opacity .3s, transform .3s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+@media (min-width: 720px) { .toast { bottom: 18px; } }
+
+/* ── POINTS POPUP ── */
+.pts-popup {
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%,-50%) scale(0);
+  background: var(--card2); border: 2px solid var(--gold);
+  border-radius: 18px; padding: 28px 38px; text-align: center;
+  z-index: 400; transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+  pointer-events: none;
+}
+.pts-popup.show { transform: translate(-50%,-50%) scale(1); }
+.pts-popup .pts {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px; color: var(--gold); font-weight: 700; line-height: 1;
+}
+.pts-popup .pts-lbl { font-size: 12px; color: var(--muted); margin-top: 6px; }
+
+/* ── RIGHT PANEL ── */
+.panel-section {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px 16px;
+}
+.panel-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px; color: var(--cream); margin-bottom: 14px;
+}
+.panel-verse { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+.panel-verse:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.panel-verse-text { font-family: 'Playfair Display', serif; font-size: 13px; line-height: 1.6; color: var(--cream); font-style: italic; margin-bottom: 5px; }
+.panel-verse-ref { font-size: 10px; color: var(--gold); font-weight: 700; letter-spacing: .06em; }
 </style>
 </head>
 <body>
 
-<div id="app">
-  <!-- Top Bar -->
-  <div id="topbar">
-    <div class="app-logo">Faith<span>Flow</span></div>
-    <div id="topbar-right">
-      <button class="icon-btn" title="Search">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-        </svg>
-      </button>
-    </div>
-  </div>
-
-  <!-- Pages -->
-  <div id="pages">
-
-    <!-- HOME -->
-    <div class="page active" id="page-home">
-      <div class="daily-verse-banner" id="daily-banner">
-        <div class="daily-tag">Verse of the Day</div>
-        <div class="daily-verse-text" id="daily-text">Loading...</div>
-        <div class="daily-verse-ref" id="daily-ref">—</div>
-        <div class="daily-verse-actions">
-          <button class="pill-btn" onclick="shareDailyVerse()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/>
-            </svg>
-            Share
-          </button>
-          <button class="pill-btn" id="daily-fav-btn" onclick="toggleDailyFav()">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="daily-fav-icon">
-              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
-            </svg>
-            Save
-          </button>
-        </div>
-      </div>
-
-      <div class="section-label">Beloved by Many ✦</div>
-      <div class="trending-grid" id="trending-verses"></div>
-    </div>
-
-    <!-- VERSES (REELS) -->
-    <div class="page" id="page-verses">
-      <div id="verse-reel-container"></div>
-    </div>
-
-    <!-- FAVOURITES -->
-    <div class="page" id="page-favourites">
-      <div class="section-label">My Saved Verses</div>
-      <div id="fav-list"></div>
-    </div>
-
-    <!-- GAME -->
-    <div class="page" id="page-game">
-      <div class="game-header">
-        <div>
-          <div class="game-score-label">Total Points</div>
-          <div class="game-score-val" id="game-score-display">0</div>
-        </div>
-        <div id="streak-display" class="streak-badge" style="display:none">
-          🔥 <span id="streak-count">0</span> streak
-        </div>
-      </div>
-
-      <div class="game-verse-box">
-        <div class="game-verse-display" id="game-verse-text">Press "New Verse" to begin!</div>
-      </div>
-
-      <div id="game-phase-container"></div>
-      <div class="game-feedback" id="game-feedback"></div>
-
-      <button class="next-btn" id="game-next-btn" onclick="gameNextPhase()">New Verse</button>
-    </div>
-
-    <!-- PROFILE -->
-    <div class="page" id="page-profile">
-      <div class="profile-hero">
-        <div class="avatar" id="profile-avatar">?</div>
-        <div class="profile-name" id="profile-name">Guest</div>
-        <div class="profile-sub" id="profile-sub">Join FaithFlow to save your progress</div>
-      </div>
-
-      <div class="stats-row">
-        <div class="stat-card">
-          <div class="stat-val" id="stat-points">0</div>
-          <div class="stat-label">Points</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-val" id="stat-favs">0</div>
-          <div class="stat-label">Saved</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-val" id="stat-streak">0</div>
-          <div class="stat-label">Streak</div>
-        </div>
-      </div>
-
-      <div class="profile-section">
-        <div class="profile-item" onclick="showAuth('login')" id="login-item">
-          <div class="profile-item-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/>
-            </svg>
-          </div>
-          <div class="profile-item-label">Sign In / Register</div>
-          <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
-        </div>
-        <div class="profile-item" onclick="logOut()" id="logout-item" style="display:none">
-          <div class="profile-item-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
-            </svg>
-          </div>
-          <div class="profile-item-label">Sign Out</div>
-          <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
-        </div>
-      </div>
-
-      <div class="profile-section">
-        <div class="profile-item" onclick="switchTab('favourites')">
-          <div class="profile-item-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
-            </svg>
-          </div>
-          <div class="profile-item-label">Saved Verses</div>
-          <div class="profile-item-value" id="fav-count-label">0 verses</div>
-          <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
-        </div>
-        <div class="profile-item" onclick="switchTab('game')">
-          <div class="profile-item-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/>
-            </svg>
-          </div>
-          <div class="profile-item-label">Verse Trivia Game</div>
-          <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
-        </div>
-      </div>
-
-      <div style="text-align:center;margin-top:30px;font-size:12px;color:var(--text-muted)">
-        FaithFlow · NIV Bible · Built with love ✦
-      </div>
-    </div>
-
-  </div>
-
-  <!-- Tab Bar -->
-  <nav id="tabbar">
-    <button class="tab active" onclick="switchTab('home')" id="tab-home">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/>
-      </svg>
-      Home
+<div id="shell">
+  <!-- Sidebar (desktop) -->
+  <nav id="sidebar">
+    <div class="sidebar-logo">Faith<em>Flow</em></div>
+    <button class="side-tab active" id="stab-home"        data-tab="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home
     </button>
-    <button class="tab" onclick="switchTab('verses')" id="tab-verses">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
-      </svg>
-      Verses
+    <button class="side-tab" id="stab-verses"      data-tab="verses">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Verses
     </button>
-    <button class="tab" onclick="switchTab('favourites')" id="tab-favourites">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
-      </svg>
-      Saved
+    <button class="side-tab" id="stab-favourites"  data-tab="favourites">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Saved
     </button>
-    <button class="tab" onclick="switchTab('game')" id="tab-game">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <rect x="2" y="6" width="20" height="12" rx="3"/><path d="M12 12h.01M17 12h.01M7 10v4M5 12h4"/>
-      </svg>
-      Game
+    <button class="side-tab" id="stab-game"        data-tab="game">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M12 12h.01M17 12h.01M7 10v4M5 12h4"/></svg>Game
     </button>
-    <button class="tab" onclick="switchTab('profile')" id="tab-profile">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
-      </svg>
-      Profile
+    <button class="side-tab" id="stab-profile"     data-tab="profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile
     </button>
   </nav>
+
+  <!-- Center pane -->
+  <div id="pane">
+    <div id="topbar">
+      <div class="app-logo">Faith<em>Flow</em></div>
+      <span class="page-title" id="topbar-title">Home</span>
+      <div style="width:80px"></div>
+    </div>
+
+    <div id="pages">
+
+      <!-- HOME -->
+      <div class="page active" id="page-home">
+        <div class="daily-card">
+          <div class="daily-tag">Verse of the Day</div>
+          <div class="daily-text" id="daily-text">…</div>
+          <div class="daily-ref"  id="daily-ref">—</div>
+          <div class="daily-actions">
+            <button class="pill" id="btn-daily-fav">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="daily-fav-svg"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+              <span id="daily-fav-lbl">Save</span>
+            </button>
+            <button class="pill" id="btn-daily-share">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>
+              Share
+            </button>
+          </div>
+        </div>
+        <div class="sec-label">Beloved by Many ✦</div>
+        <div id="trending-list"></div>
+      </div>
+
+      <!-- VERSES (REEL) -->
+      <div class="page" id="page-verses">
+        <div id="reel-wrap"></div>
+      </div>
+
+      <!-- FAVOURITES -->
+      <div class="page" id="page-favourites">
+        <div class="sec-label">My Saved Verses</div>
+        <div id="fav-list"></div>
+      </div>
+
+      <!-- GAME -->
+      <div class="page" id="page-game">
+        <div class="game-hdr">
+          <div>
+            <div class="g-score-lbl">Total Points</div>
+            <div class="g-score" id="g-score">0</div>
+          </div>
+          <div class="streak-badge" id="streak-badge" style="display:none">🔥 <span id="streak-n">0</span></div>
+        </div>
+
+        <div class="game-verse-box">
+          <div class="game-verse-text" id="g-verse">Press "New Verse" to start!</div>
+        </div>
+
+        <div id="g-phase-label" class="phase-lbl"></div>
+        <div class="opts" id="g-opts"></div>
+        <div class="feedback" id="g-feedback"></div>
+
+        <button class="primary-btn" id="g-next-btn">New Verse →</button>
+      </div>
+
+      <!-- PROFILE -->
+      <div class="page" id="page-profile">
+        <div class="profile-hero">
+          <div class="avatar" id="p-avatar">✦</div>
+          <div class="profile-name" id="p-name">Guest</div>
+          <div class="profile-sub"  id="p-sub">Join FaithFlow to save progress</div>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card"><div class="stat-val" id="s-pts">0</div><div class="stat-lbl">Points</div></div>
+          <div class="stat-card"><div class="stat-val" id="s-favs">0</div><div class="stat-lbl">Saved</div></div>
+          <div class="stat-card"><div class="stat-val" id="s-streak">0</div><div class="stat-lbl">Streak</div></div>
+        </div>
+
+        <div class="menu-section">
+          <div class="menu-item" id="menu-login">
+            <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg></div>
+            <span class="menu-label">Sign In / Register</span>
+            <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+          <div class="menu-item" id="menu-logout" style="display:none">
+            <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg></div>
+            <span class="menu-label">Sign Out</span>
+            <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+        </div>
+
+        <div class="menu-section">
+          <div class="menu-item" id="menu-go-favs">
+            <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></div>
+            <span class="menu-label">Saved Verses</span>
+            <span class="menu-value" id="fav-count-lbl">0 verses</span>
+            <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+          <div class="menu-item" id="menu-go-game">
+            <div class="menu-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M12 12h.01M17 12h.01M7 10v4M5 12h4"/></svg></div>
+            <span class="menu-label">Play Verse Trivia</span>
+            <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+          </div>
+        </div>
+
+        <div style="text-align:center;margin-top:16px;font-size:11px;color:var(--muted)">FaithFlow · NIV Bible · Made with ✦</div>
+      </div>
+
+    </div><!-- /pages -->
+
+    <!-- Mobile Tab Bar -->
+    <nav id="tabbar">
+      <button class="tab active" data-tab="home">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/></svg>Home
+      </button>
+      <button class="tab" data-tab="verses">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>Verses
+      </button>
+      <button class="tab" data-tab="favourites">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>Saved
+      </button>
+      <button class="tab" data-tab="game">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="12" rx="3"/><path d="M12 12h.01M17 12h.01M7 10v4M5 12h4"/></svg>Game
+      </button>
+      <button class="tab" data-tab="profile">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Profile
+      </button>
+    </nav>
+  </div><!-- /pane -->
+
+  <!-- Right panel (wide desktop) -->
+  <div id="panel">
+    <div class="panel-section">
+      <div class="panel-title">Quick Verses</div>
+      <div id="panel-verses"></div>
+    </div>
+    <div class="panel-section" style="font-size:12px;color:var(--muted);line-height:1.7">
+      <div class="panel-title" style="font-size:13px">About</div>
+      FaithFlow brings Scripture into your daily life. Save favourite verses, play Bible trivia, and let the Word renew you each day.
+    </div>
+  </div>
 </div>
 
-<!-- Auth Sheet -->
-<div class="auth-overlay" id="auth-overlay" onclick="closeAuthIfOutside(event)">
-  <div class="auth-sheet" style="position:relative">
-    <button class="auth-close" onclick="closeAuth()">✕</button>
+<!-- Auth overlay -->
+<div class="overlay" id="auth-overlay">
+  <div class="sheet">
+    <button class="x-btn" id="auth-close-btn">✕</button>
     <h2 id="auth-title">Welcome Back</h2>
-    <div class="form-group">
-      <label>EMAIL</label>
-      <input type="email" id="auth-email" placeholder="you@example.com">
-    </div>
-    <div class="form-group">
-      <label>PASSWORD</label>
-      <input type="password" id="auth-password" placeholder="••••••••">
-    </div>
-    <div class="form-group" id="auth-name-group" style="display:none">
-      <label>NAME</label>
-      <input type="text" id="auth-username" placeholder="Your name">
-    </div>
-    <button class="auth-btn" onclick="doAuth()">Sign In</button>
-    <div class="auth-toggle">
-      Don't have an account? <a onclick="toggleAuthMode()">Register</a>
-    </div>
+    <div class="field"><label>EMAIL</label><input type="email"     id="a-email"    placeholder="you@example.com"></div>
+    <div class="field"><label>PASSWORD</label><input type="password" id="a-pass"    placeholder="••••••••"></div>
+    <div class="field" id="a-name-wrap" style="display:none"><label>NAME</label><input type="text" id="a-name" placeholder="Your name"></div>
+    <button class="sheet-btn" id="auth-submit-btn">Sign In</button>
+    <div class="auth-toggle" id="auth-toggle-line">Don't have an account? <a id="auth-mode-toggle">Register</a></div>
   </div>
 </div>
 
 <!-- Points popup -->
-<div class="points-popup" id="points-popup">
+<div class="pts-popup" id="pts-popup">
   <div class="pts" id="pts-amount">+1</div>
-  <div class="pts-label" id="pts-label">Point earned!</div>
+  <div class="pts-lbl" id="pts-lbl">Point earned!</div>
 </div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<script src="app.js"></script>
+<script>
+// ============================================================
+//  DATA
+// ============================================================
+const VERSES = [
+  { text:"For God so loved the world that he gave his one and only Son, that whoever believes in him shall not perish but have eternal life.", ref:"John 3:16", book:"John", ch:3, v:16, t:"NT" },
+  { text:"I can do all this through him who gives me strength.", ref:"Philippians 4:13", book:"Philippians", ch:4, v:13, t:"NT" },
+  { text:"The Lord is my shepherd, I lack nothing.", ref:"Psalms 23:1", book:"Psalms", ch:23, v:1, t:"OT" },
+  { text:"Trust in the Lord with all your heart and lean not on your own understanding.", ref:"Proverbs 3:5", book:"Proverbs", ch:3, v:5, t:"OT" },
+  { text:"Be strong and courageous. Do not be afraid; do not be discouraged, for the Lord your God will be with you wherever you go.", ref:"Joshua 1:9", book:"Joshua", ch:1, v:9, t:"OT" },
+  { text:"And we know that in all things God works for the good of those who love him, who have been called according to his purpose.", ref:"Romans 8:28", book:"Romans", ch:8, v:28, t:"NT" },
+  { text:"Do not be anxious about anything, but in every situation, by prayer and petition, with thanksgiving, present your requests to God.", ref:"Philippians 4:6", book:"Philippians", ch:4, v:6, t:"NT" },
+  { text:"For I know the plans I have for you, declares the Lord, plans to prosper you and not to harm you, plans to give you hope and a future.", ref:"Jeremiah 29:11", book:"Jeremiah", ch:29, v:11, t:"OT" },
+  { text:"Come to me, all you who are weary and burdened, and I will give you rest.", ref:"Matthew 11:28", book:"Matthew", ch:11, v:28, t:"NT" },
+  { text:"Love is patient, love is kind. It does not envy, it does not boast, it is not proud.", ref:"1 Corinthians 13:4", book:"1 Corinthians", ch:13, v:4, t:"NT" },
+  { text:"In the beginning God created the heavens and the earth.", ref:"Genesis 1:1", book:"Genesis", ch:1, v:1, t:"OT" },
+  { text:"The Lord is my light and my salvation—whom shall I fear? The Lord is the stronghold of my life—of whom shall I be afraid?", ref:"Psalms 27:1", book:"Psalms", ch:27, v:1, t:"OT" },
+  { text:"But those who hope in the Lord will renew their strength. They will soar on wings like eagles; they will run and not grow weary, they will walk and not be faint.", ref:"Isaiah 40:31", book:"Isaiah", ch:40, v:31, t:"OT" },
+  { text:"This is the day the Lord has made; let us rejoice and be glad in it.", ref:"Psalms 118:24", book:"Psalms", ch:118, v:24, t:"OT" },
+  { text:"Greater love has no one than this: to lay down one's life for one's friends.", ref:"John 15:13", book:"John", ch:15, v:13, t:"NT" },
+  { text:"Rejoice in the Lord always. I will say it again: Rejoice!", ref:"Philippians 4:4", book:"Philippians", ch:4, v:4, t:"NT" },
+  { text:"Cast all your anxiety on him because he cares for you.", ref:"1 Peter 5:7", book:"1 Peter", ch:5, v:7, t:"NT" },
+  { text:"Even though I walk through the darkest valley, I will fear no evil, for you are with me; your rod and your staff, they comfort me.", ref:"Psalms 23:4", book:"Psalms", ch:23, v:4, t:"OT" },
+  { text:"For the Spirit God gave us does not make us timid, but gives us power, love and self-discipline.", ref:"2 Timothy 1:7", book:"2 Timothy", ch:1, v:7, t:"NT" },
+  { text:"The steadfast love of the Lord never ceases; his mercies never come to an end; they are new every morning; great is your faithfulness.", ref:"Lamentations 3:22", book:"Lamentations", ch:3, v:22, t:"OT" },
+  { text:"Ask and it will be given to you; seek and you will find; knock and the door will be opened to you.", ref:"Matthew 7:7", book:"Matthew", ch:7, v:7, t:"NT" },
+  { text:"I have hidden your word in my heart that I might not sin against you.", ref:"Psalms 119:11", book:"Psalms", ch:119, v:11, t:"OT" },
+  { text:"Be still, and know that I am God.", ref:"Psalms 46:10", book:"Psalms", ch:46, v:10, t:"OT" },
+  { text:"If God is for us, who can be against us?", ref:"Romans 8:31", book:"Romans", ch:8, v:31, t:"NT" },
+  { text:"He gives strength to the weary and increases the power of the weak.", ref:"Isaiah 40:29", book:"Isaiah", ch:40, v:29, t:"OT" },
+  { text:"Delight yourself in the Lord, and he will give you the desires of your heart.", ref:"Psalms 37:4", book:"Psalms", ch:37, v:4, t:"OT" },
+  { text:"Jesus answered, 'I am the way and the truth and the life. No one comes to the Father except through me.'", ref:"John 14:6", book:"John", ch:14, v:6, t:"NT" },
+  { text:"The Lord your God is with you, the Mighty Warrior who saves.", ref:"Zephaniah 3:17", book:"Zephaniah", ch:3, v:17, t:"OT" },
+  { text:"No temptation has overtaken you except what is common to mankind. And God is faithful.", ref:"1 Corinthians 10:13", book:"1 Corinthians", ch:10, v:13, t:"NT" },
+  { text:"The name of the Lord is a fortified tower; the righteous run to it and are safe.", ref:"Proverbs 18:10", book:"Proverbs", ch:18, v:10, t:"OT" },
+];
+
+const OT_BOOKS = ['Genesis','Exodus','Leviticus','Numbers','Deuteronomy','Joshua','Judges','Ruth','1 Samuel','2 Samuel','1 Kings','2 Kings','1 Chronicles','2 Chronicles','Ezra','Nehemiah','Esther','Job','Psalms','Proverbs','Ecclesiastes','Isaiah','Jeremiah','Lamentations','Ezekiel','Daniel','Hosea','Joel','Amos','Jonah','Micah','Nahum','Habakkuk','Zephaniah','Haggai','Zechariah','Malachi'];
+const NT_BOOKS = ['Matthew','Mark','Luke','John','Acts','Romans','1 Corinthians','2 Corinthians','Galatians','Ephesians','Philippians','Colossians','1 Thessalonians','2 Thessalonians','1 Timothy','2 Timothy','Titus','Philemon','Hebrews','James','1 Peter','2 Peter','1 John','2 John','3 John','Jude','Revelation'];
+
+// ============================================================
+//  STATE
+// ============================================================
+function loadState() {
+  try { const s = localStorage.getItem('ff2_state'); return s ? JSON.parse(s) : freshState(); }
+  catch { return freshState(); }
+}
+function freshState() { return { user:null, users:{}, favs:[], score:0, streak:0 }; }
+function save() { try { localStorage.setItem('ff2_state', JSON.stringify(ST)); } catch{} }
+
+const ST = loadState();
+
+// ============================================================
+//  NAVIGATION
+// ============================================================
+let currentTab = 'home';
+let reelBuilt = false;
+
+const TITLES = { home:'Home', verses:'Verses', favourites:'Saved', game:'Game', profile:'Profile' };
+
+function switchTab(tab) {
+  currentTab = tab;
+  // pages
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + tab).classList.add('active');
+  // mobile tabs
+  document.querySelectorAll('#tabbar .tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  // sidebar tabs
+  document.querySelectorAll('#sidebar .side-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
+  // title
+  document.getElementById('topbar-title').textContent = TITLES[tab] || '';
+  // lazy inits
+  if (tab === 'verses' && !reelBuilt) { buildReel(); reelBuilt = true; }
+  if (tab === 'favourites') renderFavs();
+  if (tab === 'profile') updateProfile();
+}
+
+// Tab clicks (mobile + sidebar) — delegated
+document.querySelectorAll('[data-tab]').forEach(el => {
+  el.addEventListener('click', () => switchTab(el.dataset.tab));
+});
+
+// ============================================================
+//  UTILS
+// ============================================================
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/'/g,'&#39;'); }
+function shuffle(a){ return [...a].sort(()=>Math.random()-.5); }
+function rand(a){ return a[Math.floor(Math.random()*a.length)]; }
+function dayIdx(){ const d=new Date(); return (d.getFullYear()*1000+d.getMonth()*31+d.getDate())%VERSES.length; }
+
+let toastT;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastT); toastT = setTimeout(()=>el.classList.remove('show'), 2600);
+}
+
+function doShare(text, ref) {
+  const msg = `"${text}" — ${ref}\n\nFrom FaithFlow`;
+  if (navigator.share) navigator.share({text:msg}).catch(()=>{});
+  else navigator.clipboard.writeText(msg).then(()=>toast('Copied to clipboard ✓')).catch(()=>toast('Could not copy'));
+}
+
+// ============================================================
+//  FAVOURITES LOGIC
+// ============================================================
+function isFav(ref){ return ST.favs.some(f=>f.ref===ref); }
+
+function toggleFav(ref, text, book, ch, v, t) {
+  if (isFav(ref)) {
+    ST.favs = ST.favs.filter(f=>f.ref!==ref);
+    toast('Removed from saved');
+  } else {
+    ST.favs.unshift({ref,text,book,ch,v,t,at:Date.now()});
+    toast('Saved ✦');
+  }
+  save(); syncFavCount();
+}
+
+function syncFavCount() {
+  const n = ST.favs.length;
+  document.getElementById('fav-count-lbl').textContent = n + ' verse' + (n!==1?'s':'');
+  document.getElementById('s-favs').textContent = n;
+}
+
+function makeHeartSvg(filled){
+  return `<svg viewBox="0 0 24 24" fill="${filled?'currentColor':'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>`;
+}
+
+function makeShareSvg(){
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/></svg>`;
+}
+
+// ============================================================
+//  HOME PAGE
+// ============================================================
+function initHome() {
+  const daily = VERSES[dayIdx()];
+  document.getElementById('daily-text').textContent = daily.text;
+  document.getElementById('daily-ref').textContent = '— ' + daily.ref;
+  refreshDailyBtn();
+
+  document.getElementById('btn-daily-fav').addEventListener('click', () => {
+    const d = VERSES[dayIdx()];
+    toggleFav(d.ref, d.text, d.book, d.ch, d.v, d.t);
+    refreshDailyBtn();
+  });
+  document.getElementById('btn-daily-share').addEventListener('click', () => {
+    const d = VERSES[dayIdx()]; doShare(d.text, d.ref);
+  });
+
+  // Trending
+  const list = document.getElementById('trending-list');
+  shuffle(VERSES).slice(0,6).forEach(v => list.appendChild(makeVCard(v)));
+
+  // Right panel
+  const pv = document.getElementById('panel-verses');
+  shuffle(VERSES).slice(0,4).forEach(v => {
+    const d = document.createElement('div'); d.className = 'panel-verse';
+    d.innerHTML = `<div class="panel-verse-text">${v.text}</div><div class="panel-verse-ref">${v.ref}</div>`;
+    pv.appendChild(d);
+  });
+}
+
+function refreshDailyBtn() {
+  const d = VERSES[dayIdx()];
+  const f = isFav(d.ref);
+  const btn = document.getElementById('btn-daily-fav');
+  const svg = document.getElementById('daily-fav-svg');
+  const lbl = document.getElementById('daily-fav-lbl');
+  svg.setAttribute('fill', f ? 'currentColor' : 'none');
+  lbl.textContent = f ? 'Saved' : 'Save';
+  btn.style.color = f ? '#e04090' : '';
+  btn.style.borderColor = f ? 'rgba(224,64,144,.35)' : '';
+  btn.style.background = f ? 'rgba(224,64,144,.06)' : '';
+}
+
+function makeVCard(v) {
+  const div = document.createElement('div'); div.className = 'vcard';
+  div.innerHTML = `
+    <div class="vcard-text">${v.text}</div>
+    <div class="vcard-ref">${v.ref}</div>
+    <div class="vcard-actions">
+      <button class="act-btn fav-act ${isFav(v.ref)?'saved':''}">
+        ${makeHeartSvg(isFav(v.ref))} <span>${isFav(v.ref)?'Saved':'Save'}</span>
+      </button>
+      <button class="act-btn share-act">
+        ${makeShareSvg()} Share
+      </button>
+    </div>`;
+  div.querySelector('.fav-act').addEventListener('click', function() {
+    toggleFav(v.ref, v.text, v.book, v.ch, v.v, v.t);
+    const f = isFav(v.ref);
+    this.classList.toggle('saved', f);
+    this.innerHTML = makeHeartSvg(f) + ` <span>${f?'Saved':'Save'}</span>`;
+  });
+  div.querySelector('.share-act').addEventListener('click', () => doShare(v.text, v.ref));
+  return div;
+}
+
+// ============================================================
+//  REEL
+// ============================================================
+function buildReel() {
+  const wrap = document.getElementById('reel-wrap');
+  wrap.innerHTML = '';
+  const pool = shuffle(VERSES);
+  pool.forEach((v, i) => {
+    const slide = document.createElement('div'); slide.className = 'reel-slide';
+    slide.innerHTML = `
+      <div class="reel-testament">${v.t==='NT'?'New Testament':'Old Testament'}</div>
+      <div class="reel-text">${v.text}</div>
+      <div class="reel-ref">${v.ref}</div>
+      <div class="reel-actions">
+        <button class="reel-btn fav-reel-btn ${isFav(v.ref)?'saved':''}">
+          ${makeHeartSvg(isFav(v.ref))} <span>${isFav(v.ref)?'Saved':'Save'}</span>
+        </button>
+        <button class="reel-btn share-reel-btn">
+          ${makeShareSvg()} <span>Share</span>
+        </button>
+      </div>
+      ${i===0?`<div class="scroll-cue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12l7 7 7-7"/></svg>Scroll</div>`:''}`;
+
+    slide.querySelector('.fav-reel-btn').addEventListener('click', function() {
+      toggleFav(v.ref, v.text, v.book, v.ch, v.v, v.t);
+      const f = isFav(v.ref);
+      this.classList.toggle('saved', f);
+      this.innerHTML = makeHeartSvg(f) + `<span>${f?'Saved':'Save'}</span>`;
+    });
+    slide.querySelector('.share-reel-btn').addEventListener('click', () => doShare(v.text, v.ref));
+    wrap.appendChild(slide);
+  });
+}
+
+// ============================================================
+//  FAVOURITES RENDER
+// ============================================================
+function renderFavs() {
+  const list = document.getElementById('fav-list'); list.innerHTML = '';
+  if (!ST.favs.length) {
+    list.innerHTML = `<div class="empty-state">
+      ${makeHeartSvg(false)}
+      <h3>Nothing saved yet</h3>
+      <p>Browse the Verses tab and tap Save to collect your favourite passages here.</p>
+    </div>`;
+    return;
+  }
+  ST.favs.forEach(v => {
+    const card = document.createElement('div'); card.className = 'vcard';
+    card.innerHTML = `
+      <div class="vcard-text">${v.text}</div>
+      <div class="vcard-ref">${v.ref}</div>
+      <div class="vcard-actions">
+        <button class="act-btn saved rem-btn">${makeHeartSvg(true)} Remove</button>
+        <button class="act-btn share-btn">${makeShareSvg()} Share</button>
+      </div>`;
+    card.querySelector('.rem-btn').addEventListener('click', () => { toggleFav(v.ref,v.text,v.book,v.ch,v.v,v.t); renderFavs(); });
+    card.querySelector('.share-btn').addEventListener('click', () => doShare(v.text, v.ref));
+    list.appendChild(card);
+  });
+}
+
+// ============================================================
+//  GAME
+// ============================================================
+let GS = { verse:null, phase:0, roundPts:0, totalRight:0, done:true };
+
+function gameNextBtn() {
+  if (GS.done) {
+    GS.verse = rand(VERSES);
+    GS.phase = 1; GS.roundPts = 0; GS.totalRight = 0; GS.done = false;
+    document.getElementById('g-verse').textContent = GS.verse.text;
+    hideFeedback(); renderPhase();
+    document.getElementById('g-next-btn').disabled = true;
+    document.getElementById('g-next-btn').textContent = 'Skip →';
+  }
+}
+
+function renderPhase() {
+  const { verse, phase } = GS;
+  let label = '', opts = [];
+  if (phase === 1) {
+    label = '📖 Old or New Testament?';
+    opts = shuffle(['Old Testament', 'New Testament']);
+  } else if (phase === 2) {
+    label = '📚 Which Book?';
+    const pool = verse.t === 'NT' ? NT_BOOKS : OT_BOOKS;
+    opts = shuffle([verse.book, ...pool.filter(b=>b!==verse.book).sort(()=>Math.random()-.5).slice(0,3)]);
+  } else if (phase === 3) {
+    label = '📑 Which Chapter?';
+    const c = verse.ch;
+    const wrongs = new Set();
+    while(wrongs.size < 3){ let x=c+Math.floor(Math.random()*9)-4; if(x>0&&x!==c) wrongs.add(x); }
+    opts = shuffle([c, ...[...wrongs]]);
+  }
+  document.getElementById('g-phase-label').textContent = label;
+  const optEl = document.getElementById('g-opts'); optEl.innerHTML = '';
+  opts.forEach(opt => {
+    const b = document.createElement('button'); b.className = 'opt-btn';
+    b.textContent = opt;
+    b.addEventListener('click', () => handleGuess(opt));
+    optEl.appendChild(b);
+  });
+}
+
+function handleGuess(choice) {
+  const { verse, phase } = GS;
+  const expected = phase===1 ? (verse.t==='NT'?'New Testament':'Old Testament') : phase===2 ? verse.book : verse.ch;
+  const correct = String(choice) === String(expected);
+
+  // Colour buttons
+  document.querySelectorAll('.opt-btn').forEach(b => {
+    b.disabled = true;
+    if (String(b.textContent) === String(expected)) b.classList.add('correct');
+    else if (String(b.textContent) === String(choice) && !correct) b.classList.add('wrong');
+  });
+
+  if (correct) {
+    GS.roundPts++; GS.totalRight++;
+    if (phase === 3) {
+      // All 3 correct = double
+      const bonus = GS.totalRight === 3 ? GS.roundPts * 2 : GS.roundPts;
+      ST.score += bonus; ST.streak++;
+      save(); updateScoreDisplay();
+      showPointsPopup('+' + bonus, GS.totalRight===3 ? '🎉 Perfect! Points Doubled!' : '✓ Well done!');
+      showFeedback(GS.totalRight===3 ? '🎉 All correct — points doubled!' : '✓ Correct! Great job.', 'good');
+      endRound();
+    } else {
+      showFeedback('✓ Correct! Next question…', 'good');
+      setTimeout(() => { GS.phase++; hideFeedback(); renderPhase(); }, 850);
+    }
+  } else {
+    if (GS.roundPts > 0) { ST.score += GS.roundPts; ST.streak++; }
+    else { ST.streak = 0; }
+    save(); updateScoreDisplay();
+    const ans = phase===1 ? (verse.t==='NT'?'New Testament':'Old Testament') : phase===2 ? verse.book : 'Chapter '+verse.ch;
+    showFeedback(`✗ Answer: ${ans} (${verse.ref})`, 'bad');
+    if (GS.roundPts > 0) showPointsPopup('+'+GS.roundPts, 'Partial points!');
+    endRound();
+  }
+}
+
+function endRound() {
+  GS.done = true;
+  const btn = document.getElementById('g-next-btn');
+  btn.disabled = false;
+  btn.textContent = 'Next Verse →';
+}
+
+function showFeedback(msg, type) {
+  const el = document.getElementById('g-feedback');
+  el.textContent = msg; el.className = 'feedback show ' + type;
+}
+function hideFeedback() { document.getElementById('g-feedback').className = 'feedback'; }
+
+function updateScoreDisplay() {
+  document.getElementById('g-score').textContent = ST.score;
+  document.getElementById('s-pts').textContent = ST.score;
+  document.getElementById('s-streak').textContent = ST.streak;
+  const sb = document.getElementById('streak-badge');
+  if (ST.streak >= 2) { sb.style.display='flex'; document.getElementById('streak-n').textContent = ST.streak; }
+  else { sb.style.display='none'; }
+}
+
+function showPointsPopup(amount, label) {
+  const pp = document.getElementById('pts-popup');
+  document.getElementById('pts-amount').textContent = amount;
+  document.getElementById('pts-lbl').textContent = label;
+  pp.classList.add('show');
+  setTimeout(()=>pp.classList.remove('show'), 1800);
+}
+
+document.getElementById('g-next-btn').addEventListener('click', gameNextBtn);
+
+// ============================================================
+//  PROFILE & AUTH
+// ============================================================
+let authMode = 'login';
+
+function updateProfile() {
+  if (ST.user) {
+    document.getElementById('p-avatar').textContent = ST.user.name.charAt(0).toUpperCase();
+    document.getElementById('p-name').textContent = ST.user.name;
+    document.getElementById('p-sub').textContent = ST.user.email;
+    document.getElementById('menu-login').style.display = 'none';
+    document.getElementById('menu-logout').style.display = 'flex';
+  } else {
+    document.getElementById('p-avatar').textContent = '✦';
+    document.getElementById('p-name').textContent = 'Guest';
+    document.getElementById('p-sub').textContent = 'Join FaithFlow to save progress';
+    document.getElementById('menu-login').style.display = 'flex';
+    document.getElementById('menu-logout').style.display = 'none';
+  }
+  document.getElementById('s-pts').textContent = ST.score;
+  document.getElementById('s-favs').textContent = ST.favs.length;
+  document.getElementById('s-streak').textContent = ST.streak;
+  syncFavCount();
+}
+
+function openAuth(mode) {
+  authMode = mode || 'login'; refreshAuthUI();
+  document.getElementById('auth-overlay').classList.add('show');
+}
+function closeAuth() {
+  document.getElementById('auth-overlay').classList.remove('show');
+  ['a-email','a-pass','a-name'].forEach(id => document.getElementById(id).value='');
+}
+function refreshAuthUI() {
+  const isReg = authMode === 'register';
+  document.getElementById('auth-title').textContent = isReg ? 'Join FaithFlow' : 'Welcome Back';
+  document.getElementById('auth-submit-btn').textContent = isReg ? 'Create Account' : 'Sign In';
+  document.getElementById('a-name-wrap').style.display = isReg ? 'block' : 'none';
+  document.getElementById('auth-toggle-line').innerHTML = isReg
+    ? 'Already have an account? <a id="auth-mode-toggle">Sign In</a>'
+    : 'Don\'t have an account? <a id="auth-mode-toggle">Register</a>';
+  document.getElementById('auth-mode-toggle').addEventListener('click', () => { authMode = authMode==='login'?'register':'login'; refreshAuthUI(); });
+}
+
+document.getElementById('auth-submit-btn').addEventListener('click', () => {
+  const email = document.getElementById('a-email').value.trim();
+  const pass  = document.getElementById('a-pass').value;
+  const name  = document.getElementById('a-name').value.trim();
+  if (!email || !pass) { toast('Please fill in all fields'); return; }
+  if (authMode === 'register') {
+    if (!name) { toast('Please enter your name'); return; }
+    if (ST.users[email]) { toast('Account already exists — try signing in'); return; }
+    ST.users[email] = {email, pass, name};
+    ST.user = {email, name}; save(); closeAuth(); updateProfile(); toast('Welcome to FaithFlow! 🎉');
+  } else {
+    const u = ST.users[email];
+    if (!u || u.pass !== pass) { toast('Incorrect email or password'); return; }
+    ST.user = {email, name:u.name}; save(); closeAuth(); updateProfile(); toast('Welcome back, ' + u.name + '!');
+  }
+});
+
+document.getElementById('auth-close-btn').addEventListener('click', closeAuth);
+document.getElementById('auth-overlay').addEventListener('click', e => { if(e.target===document.getElementById('auth-overlay')) closeAuth(); });
+
+document.getElementById('menu-login').addEventListener('click', () => openAuth('login'));
+document.getElementById('menu-logout').addEventListener('click', () => { ST.user=null; save(); updateProfile(); toast('Signed out. See you soon! ✦'); });
+document.getElementById('menu-go-favs').addEventListener('click', () => switchTab('favourites'));
+document.getElementById('menu-go-game').addEventListener('click', () => switchTab('game'));
+
+// ============================================================
+//  BOOT
+// ============================================================
+initHome();
+updateScoreDisplay();
+syncFavCount();
+refreshAuthUI();
+</script>
 </body>
 </html>
