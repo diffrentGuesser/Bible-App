@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>FaithFlow – Word of God, Every Day</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0a07;
+    --surface: #161109;
+    --card: #1e1610;
+    --card2: #251d12;
+    --gold: #c9a84c;
+    --gold-light: #e8cc80;
+    --gold-dim: #7a6430;
+    --cream: #f5ead8;
+    --cream-dim: #b8a98a;
+    --text: #ede0c8;
+    --text-muted: #8a7a60;
+    --accent: #9b6b3a;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --border: rgba(201,168,76,0.15);
+    --border-bright: rgba(201,168,76,0.4);
+    --tab-h: 72px;
+    --top-h: 60px;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #app {
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ======= TOP BAR ======= */
+  #topbar {
+    height: var(--top-h);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    flex-shrink: 0;
+    z-index: 10;
+  }
+  .app-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.02em;
+  }
+  .app-logo span { color: var(--cream); font-weight: 300; }
+  #topbar-right { display: flex; gap: 12px; align-items: center; }
+  .icon-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-size: 20px;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    transition: color 0.2s, background 0.2s;
+  }
+  .icon-btn:hover { color: var(--gold); background: rgba(201,168,76,0.1); }
+
+  /* ======= PAGES ======= */
+  #pages {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+  .page {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    display: none;
+    flex-direction: column;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .page::-webkit-scrollbar { display: none; }
+  .page.active { display: flex; }
+
+  /* ======= TAB BAR ======= */
+  #tabbar {
+    height: var(--tab-h);
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-shrink: 0;
+    z-index: 10;
+  }
+  .tab {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 4px;
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    position: relative;
+  }
+  .tab svg { width: 22px; height: 22px; transition: transform 0.2s; }
+  .tab.active { color: var(--gold); }
+  .tab.active svg { transform: translateY(-2px); }
+  .tab.active::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 20%; right: 20%;
+    height: 2px;
+    background: var(--gold);
+    border-radius: 0 0 2px 2px;
+  }
+
+  /* ======= SHARED COMPONENTS ======= */
+  .section-label {
+    font-size: 11px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--gold-dim);
+    font-weight: 600; padding: 20px 20px 8px;
+  }
+
+  .verse-card {
+    margin: 0 16px 12px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .verse-card::before {
+    content: '\201C';
+    position: absolute; top: -10px; left: 14px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 80px; color: var(--border-bright);
+    line-height: 1; pointer-events: none;
+  }
+  .verse-card:hover { border-color: var(--border-bright); }
+  .verse-card .verse-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 19px; line-height: 1.55;
+    color: var(--cream); margin-bottom: 12px;
+    position: relative; z-index: 1;
+  }
+  .verse-card .verse-ref {
+    font-size: 12px; color: var(--gold);
+    font-weight: 500; letter-spacing: 0.08em;
+  }
+  .verse-card .verse-actions {
+    display: flex; gap: 8px; margin-top: 14px;
+    padding-top: 14px; border-top: 1px solid var(--border);
+  }
+  .action-btn {
+    background: none; border: none; cursor: pointer;
+    color: var(--text-muted); font-size: 13px;
+    display: flex; align-items: center; gap: 6px;
+    font-family: 'DM Sans', sans-serif;
+    padding: 6px 10px; border-radius: 8px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .action-btn:hover, .action-btn.active { color: var(--gold); background: rgba(201,168,76,0.08); }
+  .action-btn.fav-active { color: #e84393; }
+  .action-btn svg { width: 16px; height: 16px; }
+
+  /* ======= HOME PAGE ======= */
+  #page-home { padding-bottom: 20px; }
+
+  .daily-verse-banner {
+    margin: 16px;
+    background: linear-gradient(135deg, #1a1205 0%, #2d1f0a 50%, #1a1205 100%);
+    border: 1px solid var(--border-bright);
+    border-radius: 20px;
+    padding: 28px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .daily-verse-banner::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at top right, rgba(201,168,76,0.12) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .daily-tag {
+    font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold);
+    font-weight: 600; margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .daily-tag::before {
+    content: '✦'; font-size: 8px;
+  }
+  .daily-verse-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; line-height: 1.55;
+    color: var(--cream); margin-bottom: 16px;
+    font-style: italic;
+  }
+  .daily-verse-ref {
+    font-size: 13px; color: var(--gold);
+    font-weight: 500; letter-spacing: 0.06em;
+  }
+  .daily-verse-actions {
+    display: flex; gap: 10px; margin-top: 20px;
+  }
+  .pill-btn {
+    border: 1px solid var(--border-bright);
+    background: rgba(201,168,76,0.08);
+    color: var(--gold);
+    border-radius: 100px; padding: 8px 16px;
+    font-size: 12px; font-family: 'DM Sans', sans-serif;
+    cursor: pointer; font-weight: 500;
+    transition: background 0.2s, border-color 0.2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .pill-btn:hover { background: rgba(201,168,76,0.2); }
+  .pill-btn svg { width: 14px; height: 14px; }
+
+  .trending-grid {
+    padding: 0 16px 8px;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+
+  /* ======= VERSES (REELS) PAGE ======= */
+  #page-verses {
+    overflow: hidden;
+    display: none;
+    flex-direction: column;
+  }
+  #page-verses.active { display: flex; }
+
+  #verse-reel-container {
+    flex: 1;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+    scrollbar-width: none;
+  }
+  #verse-reel-container::-webkit-scrollbar { display: none; }
+
+  .reel-slide {
+    height: 100%;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .reel-slide::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 30% 40%, rgba(201,168,76,0.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .reel-book-label {
+    font-size: 11px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--gold-dim);
+    margin-bottom: 28px; font-weight: 600;
+    align-self: flex-start;
+  }
+  .reel-verse-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 6vw, 30px);
+    line-height: 1.55;
+    color: var(--cream);
+    text-align: center;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .reel-verse-text::before {
+    content: '\201C';
+    font-size: 0.8em; color: var(--gold-dim);
+    position: relative; top: -0.1em;
+  }
+  .reel-verse-text::after {
+    content: '\201D';
+    font-size: 0.8em; color: var(--gold-dim);
+    position: relative; top: -0.1em;
+  }
+  .reel-ref {
+    font-size: 14px; color: var(--gold);
+    font-weight: 500; letter-spacing: 0.08em;
+    margin-bottom: 36px;
+  }
+  .reel-side-actions {
+    position: absolute;
+    right: 16px; bottom: 80px;
+    display: flex; flex-direction: column; gap: 20px;
+    align-items: center;
+  }
+  .reel-action {
+    display: flex; flex-direction: column;
+    align-items: center; gap: 4px;
+    cursor: pointer; background: none; border: none;
+    color: var(--text-muted);
+    transition: color 0.2s, transform 0.15s;
+  }
+  .reel-action svg { width: 28px; height: 28px; }
+  .reel-action span { font-size: 11px; }
+  .reel-action:active { transform: scale(0.9); }
+  .reel-action.fav-active { color: #e84393; }
+
+  .scroll-hint {
+    position: absolute; bottom: 20px; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column;
+    align-items: center; gap: 6px;
+    color: var(--text-muted); font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    animation: bounce 2s infinite;
+    opacity: 0.7;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(6px); }
+  }
+  .scroll-hint svg { width: 18px; height: 18px; }
+
+  /* ======= FAVOURITES PAGE ======= */
+  #page-favourites { padding-bottom: 20px; }
+  .empty-state {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 16px; padding: 60px 40px; text-align: center;
+    color: var(--text-muted);
+  }
+  .empty-state svg { width: 56px; height: 56px; opacity: 0.4; }
+  .empty-state h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; color: var(--cream-dim);
+  }
+  .empty-state p { font-size: 14px; line-height: 1.6; }
+
+  /* ======= GAME PAGE ======= */
+  #page-game { padding: 20px; padding-bottom: 30px; }
+  .game-header {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 20px;
+  }
+  .game-score-label { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+  .game-score-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px; color: var(--gold); font-weight: 600;
+    line-height: 1;
+  }
+  .streak-badge {
+    background: linear-gradient(135deg, #c9562c, #e8832a);
+    border-radius: 100px; padding: 6px 14px;
+    font-size: 12px; font-weight: 600; color: #fff;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .game-verse-box {
+    background: var(--card);
+    border: 1px solid var(--border-bright);
+    border-radius: 20px;
+    padding: 28px 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .game-verse-box::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .game-verse-display {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; line-height: 1.6;
+    color: var(--cream); font-style: italic;
+  }
+
+  .game-phase-label {
+    font-size: 11px; letter-spacing: 0.15em;
+    text-transform: uppercase; color: var(--gold-dim);
+    font-weight: 600; margin-bottom: 14px;
+    text-align: center;
+  }
+
+  .guess-options {
+    display: flex; flex-direction: column; gap: 10px;
+    margin-bottom: 16px;
+  }
+  .guess-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 18px;
+    color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 14px; cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, transform 0.1s;
+    text-align: left; display: flex;
+    align-items: center; justify-content: space-between;
+  }
+  .guess-btn:hover { border-color: var(--border-bright); background: var(--card2); }
+  .guess-btn:active { transform: scale(0.98); }
+  .guess-btn.correct { border-color: var(--green); background: rgba(39,174,96,0.12); color: var(--green); }
+  .guess-btn.wrong { border-color: var(--red); background: rgba(192,57,43,0.12); color: var(--red); }
+  .guess-btn.reveal-correct { border-color: var(--green); background: rgba(39,174,96,0.08); }
+
+  .game-feedback {
+    text-align: center; padding: 14px;
+    border-radius: 12px; font-size: 14px;
+    font-weight: 500; margin-bottom: 14px;
+    display: none;
+  }
+  .game-feedback.show { display: block; }
+  .game-feedback.good { background: rgba(39,174,96,0.12); color: var(--green); border: 1px solid rgba(39,174,96,0.3); }
+  .game-feedback.bad { background: rgba(192,57,43,0.12); color: #e57373; border: 1px solid rgba(192,57,43,0.3); }
+
+  .next-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    border: none; border-radius: 14px;
+    padding: 16px; color: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; letter-spacing: 0.03em;
+    transition: opacity 0.2s, transform 0.15s;
+  }
+  .next-btn:active { transform: scale(0.98); }
+  .next-btn:disabled { opacity: 0.4; cursor: default; }
+
+  .points-popup {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: var(--card2);
+    border: 2px solid var(--gold);
+    border-radius: 20px;
+    padding: 30px 40px;
+    text-align: center;
+    z-index: 100;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    pointer-events: none;
+  }
+  .points-popup.show { transform: translate(-50%, -50%) scale(1); }
+  .points-popup .pts {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 52px; color: var(--gold); font-weight: 600;
+    line-height: 1;
+  }
+  .points-popup .pts-label { font-size: 13px; color: var(--text-muted); margin-top: 6px; }
+
+  /* ======= PROFILE PAGE ======= */
+  #page-profile { padding: 20px; padding-bottom: 30px; }
+  .profile-hero {
+    background: linear-gradient(135deg, #1a1205, #2a1c09);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 30px 24px;
+    text-align: center;
+    margin-bottom: 20px;
+    position: relative; overflow: hidden;
+  }
+  .profile-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(201,168,76,0.1) 0%, transparent 60%);
+  }
+  .avatar {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 2px solid var(--gold-dim);
+    background: var(--card2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px; color: var(--gold);
+    margin: 0 auto 14px;
+    position: relative; z-index: 1;
+  }
+  .profile-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px; color: var(--cream);
+    position: relative; z-index: 1;
+  }
+  .profile-sub {
+    font-size: 12px; color: var(--text-muted);
+    margin-top: 4px; position: relative; z-index: 1;
+  }
+
+  .stats-row {
+    display: flex; gap: 12px; margin-bottom: 20px;
+  }
+  .stat-card {
+    flex: 1; background: var(--card);
+    border: 1px solid var(--border); border-radius: 14px;
+    padding: 16px 12px; text-align: center;
+  }
+  .stat-val {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px; color: var(--gold); font-weight: 600;
+    line-height: 1;
+  }
+  .stat-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; letter-spacing: 0.08em; }
+
+  .profile-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px; overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .profile-item {
+    display: flex; align-items: center;
+    padding: 16px 18px; gap: 14px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer; transition: background 0.2s;
+  }
+  .profile-item:last-child { border-bottom: none; }
+  .profile-item:hover { background: var(--card2); }
+  .profile-item-icon {
+    width: 36px; height: 36px;
+    background: rgba(201,168,76,0.1);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold); flex-shrink: 0;
+  }
+  .profile-item-icon svg { width: 18px; height: 18px; }
+  .profile-item-label { flex: 1; font-size: 14px; font-weight: 500; }
+  .profile-item-value { font-size: 13px; color: var(--text-muted); }
+  .chevron { color: var(--text-muted); }
+  .chevron svg { width: 14px; height: 14px; }
+
+  /* Auth form */
+  .auth-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    display: none; align-items: flex-end;
+    z-index: 200;
+  }
+  .auth-overlay.show { display: flex; }
+  .auth-sheet {
+    width: 100%; max-width: 480px;
+    margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px 24px 0 0;
+    padding: 30px 24px;
+    padding-bottom: calc(30px + env(safe-area-inset-bottom, 0));
+  }
+  .auth-sheet h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px; color: var(--cream);
+    margin-bottom: 24px;
+  }
+  .form-group { margin-bottom: 16px; }
+  .form-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 6px; letter-spacing: 0.08em; }
+  .form-group input {
+    width: 100%; background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px;
+    color: var(--text); font-size: 15px;
+    font-family: 'DM Sans', sans-serif;
+    outline: none; transition: border-color 0.2s;
+  }
+  .form-group input:focus { border-color: var(--gold-dim); }
+  .auth-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--gold-dim), var(--gold));
+    border: none; border-radius: 14px;
+    padding: 16px; color: var(--bg);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px; font-weight: 600;
+    cursor: pointer; margin-top: 8px;
+    transition: opacity 0.2s;
+  }
+  .auth-btn:hover { opacity: 0.9; }
+  .auth-toggle {
+    text-align: center; margin-top: 16px;
+    font-size: 13px; color: var(--text-muted);
+  }
+  .auth-toggle a { color: var(--gold); cursor: pointer; text-decoration: none; }
+  .auth-close {
+    position: absolute; top: 16px; right: 16px;
+    background: var(--card); border: none;
+    width: 32px; height: 32px; border-radius: 50%;
+    color: var(--text-muted); cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+
+  /* Notification toast */
+  .toast {
+    position: fixed;
+    bottom: calc(var(--tab-h) + 16px);
+    left: 50%; transform: translateX(-50%) translateY(20px);
+    background: var(--card2); border: 1px solid var(--border-bright);
+    border-radius: 100px; padding: 10px 20px;
+    font-size: 13px; color: var(--gold);
+    white-space: nowrap; z-index: 300;
+    opacity: 0; transition: opacity 0.3s, transform 0.3s;
+    pointer-events: none;
+  }
+  .toast.show {
+    opacity: 1; transform: translateX(-50%) translateY(0);
+  }
+
+  /* Animated crosshatch bg for reels */
+  .reel-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    opacity: 0.03;
+    background-image: repeating-linear-gradient(
+      45deg, var(--gold) 0px, var(--gold) 1px,
+      transparent 1px, transparent 20px
+    );
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- Top Bar -->
+  <div id="topbar">
+    <div class="app-logo">Faith<span>Flow</span></div>
+    <div id="topbar-right">
+      <button class="icon-btn" title="Search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Pages -->
+  <div id="pages">
+
+    <!-- HOME -->
+    <div class="page active" id="page-home">
+      <div class="daily-verse-banner" id="daily-banner">
+        <div class="daily-tag">Verse of the Day</div>
+        <div class="daily-verse-text" id="daily-text">Loading...</div>
+        <div class="daily-verse-ref" id="daily-ref">—</div>
+        <div class="daily-verse-actions">
+          <button class="pill-btn" onclick="shareDailyVerse()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/>
+            </svg>
+            Share
+          </button>
+          <button class="pill-btn" id="daily-fav-btn" onclick="toggleDailyFav()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="daily-fav-icon">
+              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+            </svg>
+            Save
+          </button>
+        </div>
+      </div>
+
+      <div class="section-label">Beloved by Many ✦</div>
+      <div class="trending-grid" id="trending-verses"></div>
+    </div>
+
+    <!-- VERSES (REELS) -->
+    <div class="page" id="page-verses">
+      <div id="verse-reel-container"></div>
+    </div>
+
+    <!-- FAVOURITES -->
+    <div class="page" id="page-favourites">
+      <div class="section-label">My Saved Verses</div>
+      <div id="fav-list"></div>
+    </div>
+
+    <!-- GAME -->
+    <div class="page" id="page-game">
+      <div class="game-header">
+        <div>
+          <div class="game-score-label">Total Points</div>
+          <div class="game-score-val" id="game-score-display">0</div>
+        </div>
+        <div id="streak-display" class="streak-badge" style="display:none">
+          🔥 <span id="streak-count">0</span> streak
+        </div>
+      </div>
+
+      <div class="game-verse-box">
+        <div class="game-verse-display" id="game-verse-text">Press "New Verse" to begin!</div>
+      </div>
+
+      <div id="game-phase-container"></div>
+      <div class="game-feedback" id="game-feedback"></div>
+
+      <button class="next-btn" id="game-next-btn" onclick="gameNextPhase()">New Verse</button>
+    </div>
+
+    <!-- PROFILE -->
+    <div class="page" id="page-profile">
+      <div class="profile-hero">
+        <div class="avatar" id="profile-avatar">?</div>
+        <div class="profile-name" id="profile-name">Guest</div>
+        <div class="profile-sub" id="profile-sub">Join FaithFlow to save your progress</div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-val" id="stat-points">0</div>
+          <div class="stat-label">Points</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="stat-favs">0</div>
+          <div class="stat-label">Saved</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-val" id="stat-streak">0</div>
+          <div class="stat-label">Streak</div>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <div class="profile-item" onclick="showAuth('login')" id="login-item">
+          <div class="profile-item-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"/>
+            </svg>
+          </div>
+          <div class="profile-item-label">Sign In / Register</div>
+          <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+        <div class="profile-item" onclick="logOut()" id="logout-item" style="display:none">
+          <div class="profile-item-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+            </svg>
+          </div>
+          <div class="profile-item-label">Sign Out</div>
+          <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+      </div>
+
+      <div class="profile-section">
+        <div class="profile-item" onclick="switchTab('favourites')">
+          <div class="profile-item-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+            </svg>
+          </div>
+          <div class="profile-item-label">Saved Verses</div>
+          <div class="profile-item-value" id="fav-count-label">0 verses</div>
+          <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+        <div class="profile-item" onclick="switchTab('game')">
+          <div class="profile-item-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/>
+            </svg>
+          </div>
+          <div class="profile-item-label">Verse Trivia Game</div>
+          <div class="chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:30px;font-size:12px;color:var(--text-muted)">
+        FaithFlow · NIV Bible · Built with love ✦
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Tab Bar -->
+  <nav id="tabbar">
+    <button class="tab active" onclick="switchTab('home')" id="tab-home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9,22 9,12 15,12 15,22"/>
+      </svg>
+      Home
+    </button>
+    <button class="tab" onclick="switchTab('verses')" id="tab-verses">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/>
+      </svg>
+      Verses
+    </button>
+    <button class="tab" onclick="switchTab('favourites')" id="tab-favourites">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/>
+      </svg>
+      Saved
+    </button>
+    <button class="tab" onclick="switchTab('game')" id="tab-game">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="2" y="6" width="20" height="12" rx="3"/><path d="M12 12h.01M17 12h.01M7 10v4M5 12h4"/>
+      </svg>
+      Game
+    </button>
+    <button class="tab" onclick="switchTab('profile')" id="tab-profile">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+      Profile
+    </button>
+  </nav>
+</div>
+
+<!-- Auth Sheet -->
+<div class="auth-overlay" id="auth-overlay" onclick="closeAuthIfOutside(event)">
+  <div class="auth-sheet" style="position:relative">
+    <button class="auth-close" onclick="closeAuth()">✕</button>
+    <h2 id="auth-title">Welcome Back</h2>
+    <div class="form-group">
+      <label>EMAIL</label>
+      <input type="email" id="auth-email" placeholder="you@example.com">
+    </div>
+    <div class="form-group">
+      <label>PASSWORD</label>
+      <input type="password" id="auth-password" placeholder="••••••••">
+    </div>
+    <div class="form-group" id="auth-name-group" style="display:none">
+      <label>NAME</label>
+      <input type="text" id="auth-username" placeholder="Your name">
+    </div>
+    <button class="auth-btn" onclick="doAuth()">Sign In</button>
+    <div class="auth-toggle">
+      Don't have an account? <a onclick="toggleAuthMode()">Register</a>
+    </div>
+  </div>
+</div>
+
+<!-- Points popup -->
+<div class="points-popup" id="points-popup">
+  <div class="pts" id="pts-amount">+1</div>
+  <div class="pts-label" id="pts-label">Point earned!</div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
